@@ -1,0 +1,3 @@
+connect - try to connect to server
+exit - shut down connection and exit program
+help - list of possible commands

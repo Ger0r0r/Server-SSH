@@ -9,8 +9,7 @@
 #define MAXLINE 1024
 
 int main(){
-    printf("Enter your message\n");
-    char buf[MAXLINE] = {0};
+    char * buf = "@Give_info";
     read(STDIN_FILENO, buf, MAXLINE);
     struct sockaddr_in serv_addr;
     memset(&serv_addr, 0, sizeof(serv_addr));
@@ -31,7 +30,7 @@ int main(){
 
     sendto(sock_fd, buf, strlen(buf), MSG_CONFIRM, (const struct sockaddr *) &serv_addr, sizeof serv_addr);
 
-    // получаем
+    // get
     socklen_t len = sizeof(serv_addr);
     recvfrom(sock_fd, buf, sizeof(buf), MSG_WAITALL, (struct sockaddr *) &serv_addr, &len);
     printf("Get answer from server: ip = %s\nMessage : %s\n", inet_ntoa(serv_addr.sin_addr), buf);
