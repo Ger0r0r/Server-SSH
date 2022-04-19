@@ -1,0 +1,14 @@
+rating task:
+*connect by udp/tcp
+*find server by broadcast
+*log files
+*copy files
+*user log in
+*build
+*daemon
+*error handling
+*remote shell
+*client isolation(?)
+
+other task
+*chat
