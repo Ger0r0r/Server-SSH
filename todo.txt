@@ -12,3 +12,5 @@ rating task:
 
 other task
 *chat
+*full/short recived messages
+*list of possible commandes and help
