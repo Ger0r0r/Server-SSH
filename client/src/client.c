@@ -38,34 +38,10 @@ int Get_code(input enter){
 	return ret;
 }
 
-void Do_task(input enter, connection serv_info,int code){
+void Do_task(input enter, connection serv_info, int code){
 	switch (code){
-	case 1:{ //help
-		printf(
-			"connect - try to connect to server\n"
-			"exit - shut down connection and exit program\n"
-			"help - list of possible commands\n"
-		);
-		break;
-	}
-	case 2:{ //connect
-
-		break;
-	}
-	case 3:{
-
-		break;
-	}
-	case 4:{
-
-		break;
-	}
-	case 5:{
-
-		break;
-	}
-	case 6:{
-
+	case 1:{ 
+		
 		break;
 	}
 	default:

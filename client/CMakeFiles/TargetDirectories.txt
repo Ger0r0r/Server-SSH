@@ -1,2 +1,0 @@
-/home/ger0r0r/StudyProg/Server-SSH/client/CMakeFiles/rebuild_cache.dir
-/home/ger0r0r/StudyProg/Server-SSH/client/CMakeFiles/edit_cache.dir

@@ -10,7 +10,7 @@ int main() {
 		printf("> ");
 		enter = Read_input();
 		code = Get_code(enter);
-		Do_task(enter, code);
+		//Do_task(enter, server_info,code);
 	}
 
 	return 0;

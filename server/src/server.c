@@ -1,20 +1,8 @@
-// Server side implementation of UDP client-server model
-#include <stdio.h>
-#include <stdlib.h>
-#include <unistd.h>
-#include <string.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <arpa/inet.h>
-#include <netinet/in.h>
+#include "../headers/server.h"
 
-#define PORT	 8080
-#define MAXLINE 1024
-
-// Driver code
-int main() {
+void XXXX() {
 	int sockfd;
-	char buffer[MAXLINE];
+	char buffer[MAX_COMMAND_LENGHT];
 	char *hello = "Hello from server";
 	struct sockaddr_in servaddr, cliaddr;
 	
@@ -44,7 +32,7 @@ int main() {
 
 	len = sizeof(cliaddr); //len is value/result
 
-	n = recvfrom(sockfd, (char *)buffer, MAXLINE,
+	n = recvfrom(sockfd, (char *)buffer, MAX_COMMAND_LENGHT,
 				MSG_WAITALL, ( struct sockaddr *) &cliaddr,
 				&len);
 	buffer[n] = '\0';
@@ -54,5 +42,5 @@ int main() {
 			len);
 	printf("Hello message sent.\n");
 	
-	return 0;
+	return;
 }
