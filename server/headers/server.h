@@ -23,7 +23,7 @@ typedef struct {
 }input;
 
 typedef struct {
-	in_addr addr;
+	struct in_addr addr;
 	in_port_t port;
 }connection;
 
@@ -31,6 +31,6 @@ void Broadcast_scanning();
 void Wait_connection();
 void Handler_connection(int sigN, siginfo_t* sigInfo, void* context);
 connection Translate_signal(size_t data);
-void Start_connection(struct sockaddr_in new_cn)
+void Start_connection(struct sockaddr_in new_cn);
 
 #endif

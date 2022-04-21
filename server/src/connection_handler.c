@@ -5,7 +5,7 @@ int signal_input;
 void Wait_connection(){
 	struct sigaction act;
 	memset(&act, 0 , sizeof(act));
-	act.sa_handler = &Handler_connection;
+	act.sa_sigaction = Handler_connection;
 	act.sa_flags = SA_SIGINFO;
 	sigset_t set;
 	sigemptyset(&set);
@@ -32,7 +32,7 @@ void Handler_connection(int sigN, siginfo_t* sigInfo, void* context){
 	int pid = fork();
 
 	if (pid == 0){
-		printf("%d:%d %d:%d\n", new_client.addr, new_client.port, ntoa(new_client.addr), ntohs(new_client.port));
+		printf("%s:%d\n", inet_ntoa(new_client.addr), ntohs(new_client.port));
 		return;
 	}
 	
@@ -44,7 +44,7 @@ void Handler_connection(int sigN, siginfo_t* sigInfo, void* context){
 connection Translate_signal(size_t data){
 	connection temp;
 
-	temp.addr = htonl(data & 0b11111111111111111111111111111111);
+	temp.addr.s_addr = htonl(data & 0b11111111111111111111111111111111);
 	temp.port = htons((data >> 32) & 0b1111111111111111);
 
 	return temp;
