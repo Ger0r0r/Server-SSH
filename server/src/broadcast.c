@@ -16,7 +16,7 @@ void Broadcast_scanning(){
 
 	serv_addr.sin_addr.s_addr = htonl(INADDR_ANY);
 	serv_addr.sin_family = AF_INET;
-	serv_addr.sin_port = htons(27312);
+	serv_addr.sin_port = htons(BROADCAST_PORT);
 
 	int a = 1;
 	setsockopt(sock_fd_rcv, SOL_SOCKET, SO_BROADCAST, &a, sizeof(a));
@@ -44,16 +44,14 @@ void Broadcast_scanning(){
 void Start_connection(struct sockaddr_in new_cn){
 
 	union sigval cn_info;
+	memset(&cn_info, 0, sizeof(cn_info));
 
-	int data[2];
+	size_t builder_ptr = 0;
 
-	in_addr_t first = new_cn.sin_addr.s_addr;
-	in_port_t second = new_cn.sin_port;
+	builder_ptr |= ntohl(new_cn.sin_addr.s_addr);
+	builder_ptr |= ((size_t)(ntohs(new_cn.sin_port))<<32);
 
-	data[0] = first;
-	data[1] = second;
-
-	cn_info.sival_ptr = (void*)data;
+	cn_info.sival_ptr = (void*)builder_ptr;
 
 	sigqueue(getppid(), SIGUSR1, cn_info);
 }

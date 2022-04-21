@@ -13,6 +13,7 @@
 #include <fcntl.h>
 
 #define MAX_COMMAND_LENGHT 1024
+#define BROADCAST_PORT 23456
 
 typedef struct {
 	char cmd[MAX_COMMAND_LENGHT];

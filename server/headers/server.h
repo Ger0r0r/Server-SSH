@@ -15,7 +15,7 @@
 
 
 #define MAX_COMMAND_LENGHT 1024
-#define PORT	 8080
+#define BROADCAST_PORT 23456
 
 typedef struct {
 	char cmd[MAX_COMMAND_LENGHT];
