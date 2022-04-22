@@ -16,6 +16,7 @@
 
 #define MAX_COMMAND_LENGHT 1024
 #define BROADCAST_PORT 23456
+#define ARRAY_SIZE_FOR_0BINT 32
 
 typedef struct {
 	char cmd[MAX_COMMAND_LENGHT];
@@ -37,7 +38,7 @@ connection Translate_signal(size_t data);
 void Administraitor_TCP(connection client);
 void Administraitor_UDP(connection client);
 
-void Preparing_keys();
+void Preparing_keys(int sock_fd, struct sockaddr_in client);
 void Encryption();
 void Decoding();
 

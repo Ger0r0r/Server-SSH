@@ -3,11 +3,23 @@
 void Administraitor_UDP(connection client){
 
 	char buffer[MAX_COMMAND_LENGHT] = {0};
+
 	int sock_fd_adm;
 
 	// Creating socket file descriptor
 	if ( (sock_fd_adm = socket(AF_INET, SOCK_DGRAM, 0)) < 0 ) {
 		perror("socket creation failed");
+		exit(EXIT_FAILURE);
+	}
+
+	struct sockaddr_in admin_addr;
+	memset(&admin_addr, 0, sizeof(admin_addr));
+	admin_addr.sin_family = AF_INET;
+	admin_addr.sin_port = BROADCAST_PORT + current_client;
+	admin_addr.sin_addr = INADDR_ANY;
+
+	if ( bind(sock_fd_adm, (const struct sockaddr *)&admin_addr, sizeof(admin_addr)) < 0 ){
+		perror("bind failed");
 		exit(EXIT_FAILURE);
 	}
 
@@ -17,8 +29,8 @@ void Administraitor_UDP(connection client){
 	client_addr.sin_port = client.port;
 	client_addr.sin_addr = client.addr;
 
-	sendto();
 
+	Preparing_keys()
 
 
 
