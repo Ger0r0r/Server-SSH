@@ -33,6 +33,15 @@ void Handler_connection(int sigN, siginfo_t* sigInfo, void* context){
 
 	if (pid == 0){
 		printf("%s:%d\n", inet_ntoa(new_client.addr), ntohs(new_client.port));
+		current_client++;
+		if (mode == 1){ // TCP
+			Administraitor_TCP(new_client);
+		}else if (mode == 0){ // UDP
+			Administraitor_UDP(new_client);
+		}else{
+			// ERROR
+		}
+		
 		return;
 	}
 	

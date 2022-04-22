@@ -33,7 +33,7 @@ void Broadcast_scanning(){
 		Start_connection(cli_addr);
 
 		sock_fd_snd = socket(AF_INET, SOCK_DGRAM, 0);
-		char buf_answer[1024] = "Pshol nahuy!\n";
+		char buf_answer[MAX_COMMAND_LENGHT] = "Wait for administraitor\n";
 		sendto(sock_fd_snd, buf_answer, strlen(buf_answer), MSG_CONFIRM, (const struct sockaddr *) &cli_addr, sizeof cli_addr);
 		memset(buf_answer, 0, sizeof buf_answer);
 		memset(buf, 0, sizeof buf);

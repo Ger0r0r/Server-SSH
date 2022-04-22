@@ -28,9 +28,17 @@ typedef struct {
 }connection;
 
 void Broadcast_scanning();
+void Start_connection(struct sockaddr_in new_cn);
+
 void Wait_connection();
 void Handler_connection(int sigN, siginfo_t* sigInfo, void* context);
 connection Translate_signal(size_t data);
-void Start_connection(struct sockaddr_in new_cn);
+
+void Administraitor_TCP(connection client);
+void Administraitor_UDP(connection client);
+
+void Preparing_keys();
+void Encryption();
+void Decoding();
 
 #endif
