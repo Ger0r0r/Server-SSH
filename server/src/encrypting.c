@@ -2,12 +2,12 @@
 
 void Preparing_keys(int sock_fd, struct sockaddr_in client){
 	int a = rand() / 0b1111111111111111;
-	int A = Speed_degree_with_mod(public_dh_key_g, a, public_dh_key_p);
+	int A = Speed_degree_with_mod(PUBLIC_KEY_G, a, PUBLIC_KEY_P);
 
-	char client_message[MAX_COMMAND_LENGHT] = {0}
+	char client_message[MAX_COMMAND_LENGHT] = {0};
 	char greetings[MAX_COMMAND_LENGHT] = {0};
 
-	sprintf(greetings, "@You are not alone!\n%d\n%d\n%d\n", public_dh_key_p, public_dh_key_g, A);
+	sprintf(greetings, "@You are not alone!\n%d\n%d\n%d\n", PUBLIC_KEY_P, PUBLIC_KEY_G, A);
 
 	sendto(sock_fd, (const char *)greetings, strlen(greetings), MSG_CONFIRM, (const struct sockaddr *)&client, sizeof(client));
 
@@ -19,7 +19,7 @@ void Preparing_keys(int sock_fd, struct sockaddr_in client){
 	char * place_B = strchr(client_message, ':');
 
 	int B = atoi(place_B + 1);
-	int K = Speed_degree_with_mod(public_dh_key_g, B, public_dh_key_p);
+	int K = Speed_degree_with_mod(PUBLIC_KEY_G, B, PUBLIC_KEY_P);
 
 	printf("KEY %d\n", K);
 }

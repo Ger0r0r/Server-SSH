@@ -21,31 +21,21 @@ input Read_input(){
 	return ret;
 }
 
-int Get_code(input enter){
+int Do_task(input enter){
 	int ret;
 
-	if (strcmp("exit",enter.cmd) == 0){
+	if (strcmp("@exit",enter.cmd) == 0){
 		ret = 0;
-	}else if (strcmp("help",enter.cmd) == 0){
+	}else if (strcmp("@connect",enter.cmd) == 0){
+		printf("Try to find connection...\n");
+
+		Connection_attempt();
+
 		ret = 1;
-	}else if (strcmp("connect",enter.cmd) == 0){
-		ret = 2;
 	}else{
 		printf("Unknown command!\n");
 		ret = -1;
 	}
 
 	return ret;
-}
-
-void Do_task(input enter, connection serv_info, int code){
-	switch (code){
-	case 1:{ 
-		
-		break;
-	}
-	default:
-		//ERROR
-		break;
-	}
 }

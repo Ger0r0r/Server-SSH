@@ -1,11 +1,9 @@
 #include "../headers/server.h"
 
-int current_client = 0;
-int mode = -1; // 0 - UDP; 1 - TCP; -1 - ERROR
-int public_dh_key_p = 9887;
-int public_dh_key_g = 7;
 
 int main(int argc, char ** argv) {
+
+	int mode = -1; // 0 - UDP; 1 - TCP; -1 - ERROR
 
 	if (argc != 2){
 		printf("Start program with mode: %s -udp/-tcp\n", argv[0]);
@@ -23,7 +21,7 @@ int main(int argc, char ** argv) {
 	int code = fork();
 
 	if (code){
-		Wait_connection();
+		Wait_connection(mode);
 	}else{
 		Broadcast_scanning();
 	}

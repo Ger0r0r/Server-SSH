@@ -1,6 +1,14 @@
 #include "../headers/client.h"
 
-void Broadcast_find(){
+struct sockaddr_in Connection_attempt(){
+
+	struct sockaddr_in serv_addr = Broadcast_find();
+
+	return serv_addr;
+}
+
+
+struct sockaddr_in Broadcast_find(){
 	char * buf = "@Give_info";
 	read(STDIN_FILENO, buf, MAX_COMMAND_LENGHT);
 	struct sockaddr_in serv_addr;
@@ -26,5 +34,5 @@ void Broadcast_find(){
 	socklen_t len = sizeof(serv_addr);
 	recvfrom(sock_fd, buf, sizeof(buf), MSG_WAITALL, (struct sockaddr *) &serv_addr, &len);
 	printf("Get answer from server: ip = %s\nMessage : %s\n", inet_ntoa(serv_addr.sin_addr), buf);
-
+	return serv_addr;
 }

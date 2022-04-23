@@ -1,6 +1,7 @@
 #include "../headers/server.h"
 
 void Broadcast_scanning(){
+
 	char buf[MAX_COMMAND_LENGHT] = {0};
 
 	int sock_fd_rcv, sock_fd_snd;
