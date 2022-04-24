@@ -7,7 +7,7 @@ void Preparing_numeral_keys(int sock_fd, SSI client){
 	size_t a1 = rand() % 0b11111111111111111111111111111111;
 	size_t a2 = rand() % 0b11111111111111111111111111111111;
 
-	
+	printf("Gen:\n%zu\n%zu\n", a1,a2);	
 
 	size_t A1 = Speed_degree_with_mod(PUBLIC_KEY_G, a1, PUBLIC_KEY_P);
 	size_t A2 = Speed_degree_with_mod(PUBLIC_KEY_G, a2, PUBLIC_KEY_P);
