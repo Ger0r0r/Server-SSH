@@ -43,6 +43,12 @@ void Administraitor_UDP(){
 	cn_info.sival_ptr = (void*)mine_info;
 	sigqueue(getppid(), SIGUSR1, cn_info);
 	
+	
+
+	
+
+
+
 	//int len, n;
 
 	//len = sizeof(cli_addr); //len is value/result

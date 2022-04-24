@@ -61,9 +61,11 @@ int Broadcast_find(SSI own_addr, SSI * ret_addr){
 			char * point = strchr(buf, ':');
 			point++;
 
+			printf("\nPick up port: %s\n", point);
+
 			ret_addr->sin_family = AF_INET;
 			ret_addr->sin_addr = serv_addr.sin_addr;
-			ret_addr->sin_port = atoi(point);
+			ret_addr->sin_port = htons(atoi(point));
 
 			return 1;
 		}
