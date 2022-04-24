@@ -25,13 +25,10 @@ typedef struct {
 }input;
 
 input Read_input();
-int Do_task(input enter);
+int Do_task(struct sockaddr_in own_addr, input enter);
 
-struct sockaddr_in Get_addr();
-void Bind_addr(int sock_fd_own, struct sockaddr_in own_addr);
-
-int Connection_attempt();
-int Broadcast_find();
+int Connection_attempt(struct sockaddr_in own_addr);
+int Broadcast_find(struct sockaddr_in own_addr);
 
 
 #endif

@@ -31,7 +31,7 @@ void Broadcast_scanning(){
 		recvfrom(sock_fd_rcv, buf, sizeof(buf), MSG_WAITALL,
 				(struct sockaddr *) &cli_addr, &len);
 
-		printf("Got message from broadcast, ip = %s, port = %d\nMessage : %s",
+		printf("Got message from broadcast, ip = %s, port = %d\nMessage : %s\n",
 			inet_ntoa(cli_addr.sin_addr), ntohs(cli_addr.sin_port), buf);
 
 		Start_connection(cli_addr);

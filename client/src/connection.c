@@ -1,20 +1,23 @@
 #include "../headers/client.h"
 
-int Connection_attempt(){
+int Connection_attempt(struct sockaddr_in own_addr){
 
-	int ret = Broadcast_find();
+	int ret = Broadcast_find(own_addr);
 
 	if (ret){
 		
 	}else{
-		printf("\tConnection failed\n");
+		printf("\n\tConnection failed\n");
 	}
 	return 0;
 }
 
 
-int Broadcast_find(){
-	char buf[MAX_COMMAND_LENGHT] = "@Give_info";
+int Broadcast_find(struct sockaddr_in own_addr){
+	char buf[MAX_COMMAND_LENGHT] = {0};
+
+	sprintf(buf, "@Hello! port:%d", htons(own_addr.sin_port));
+
 
 	struct sockaddr_in serv_addr;
 	memset(&serv_addr, 0, sizeof(serv_addr));
@@ -33,6 +36,8 @@ int Broadcast_find(){
 	setsockopt(sock_fd, SOL_SOCKET, SO_BROADCAST, &a, sizeof(a));
 	//bind(sock_fd, (struct sockaddr*) &serv_addr, sizeof (serv_addr));
 
+	//printf("BR ip = %s, port = %d\n", inet_ntoa(serv_addr.sin_addr), ntohs(serv_addr.sin_port));
+
 	int n;
 
 	for (size_t i = 0; i < COUNT_OF_ATTEMPT_FOR_CONNECTION; i++){
@@ -44,7 +49,7 @@ int Broadcast_find(){
 		socklen_t len = sizeof(serv_addr);
 		n = recvfrom(sock_fd, buf, sizeof(buf), MSG_DONTWAIT, (struct sockaddr *) &serv_addr, &len);
 		
-		printf("\tGet: %s\n", buf);
+		//printf("\tGet: %s\n", buf);
 
 		if (n && (strncmp(buf, "@Wait for administraitor\n", 18) == 0)){
 			printf("\tGet answer from server: ip = %s\n\tMessage : %s\n", inet_ntoa(serv_addr.sin_addr), buf);

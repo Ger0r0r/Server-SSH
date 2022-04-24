@@ -21,15 +21,15 @@ input Read_input(){
 	return ret;
 }
 
-int Do_task(input enter){
+int Do_task(struct sockaddr_in own_addr, input enter){
 	int ret;
 
 	if (strcmp("@exit",enter.cmd) == 0){
 		ret = 0;
 	}else if (strcmp("@connect",enter.cmd) == 0){
-		printf("\n\tTry to find connection...\n");
+		printf("\n\tTry to find connection...\n\n");
 
-		Connection_attempt();
+		Connection_attempt(own_addr);
 		
 
 		ret = 1;

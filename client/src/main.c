@@ -23,8 +23,18 @@ int main(int argc, char ** argv) {
 		exit(0);
 	}
 
-	struct sockaddr_in own_addr = Get_addr();
-	Bind_addr(sock_fd_own, own_addr);
+	struct sockaddr_in own_addr = {};
+	memset(&own_addr, 0, sizeof(own_addr));
+	own_addr.sin_family = AF_INET;
+	own_addr.sin_port = htons(OWN_PORT);
+	own_addr.sin_addr.s_addr = htonl(INADDR_ANY);
+	
+	if ( bind(sock_fd_own, (struct sockaddr *)&own_addr, sizeof(own_addr)) < 0 ){
+		perror("bind failed");
+		exit(EXIT_FAILURE);
+	}
+
+	printf("OWN ip = %s, port = %d\n", inet_ntoa(own_addr.sin_addr), ntohs(own_addr.sin_port));
 
 	int code = 1;
 	input enter;
@@ -32,7 +42,7 @@ int main(int argc, char ** argv) {
 	while (code){
 		printf("> ");
 		enter = Read_input();
-		code = Do_task(enter);
+		code = Do_task(own_addr, enter);
 	}
 
 	return 0;

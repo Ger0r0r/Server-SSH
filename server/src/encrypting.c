@@ -7,11 +7,12 @@ void Preparing_keys(int sock_fd, struct sockaddr_in client){
 	char client_message[MAX_COMMAND_LENGHT] = {0};
 	char greetings[MAX_COMMAND_LENGHT] = {0};
 
-	sprintf(greetings, "@You are not alone!\n%d\n%d\n%d\n", PUBLIC_KEY_P, PUBLIC_KEY_G, A);
+	sprintf(greetings, "@You are not alone!\n@%d@%d@%d\n", PUBLIC_KEY_P, PUBLIC_KEY_G, A);
 
 	sendto(sock_fd, (const char *)greetings, strlen(greetings), MSG_CONFIRM, (const struct sockaddr *)&client, sizeof(client));
 
-	int n,len;
+	int n;
+	unsigned int len;
 	n = recvfrom(sock_fd, (char *)client_message, MAX_COMMAND_LENGHT, MSG_WAITALL, (struct sockaddr *)&client, &len);
 	client_message[n] = '\0';
 
