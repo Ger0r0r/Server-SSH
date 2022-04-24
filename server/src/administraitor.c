@@ -47,6 +47,7 @@ void Administraitor_UDP(){
 	socklen_t len = sizeof(client_addr);
 	memset(buf, 0, sizeof(buf));
 	n = recvfrom(sock_fd_adm, (char *)buf, MAX_COMMAND_LENGHT, MSG_WAITALL, (struct sockaddr *)&client_addr, &len);
+	// Message: @Hey admin!
 
 	kill(getppid(), SIGUSR2);
 

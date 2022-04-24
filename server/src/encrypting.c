@@ -2,8 +2,8 @@
 
 void Preparing_numeral_keys(int sock_fd, SSI client){
 
-	int a1 = rand() / 0b1111111111111111;
-	int a2 = rand() / 0b1111111111111111;
+	int a1 = rand() / 0b11111111111111111111111111111111;
+	int a2 = rand() / 0b11111111111111111111111111111111;
 	int A1 = Speed_degree_with_mod(PUBLIC_KEY_G, a1, PUBLIC_KEY_P);
 	int A2 = Speed_degree_with_mod(PUBLIC_KEY_G, a2, PUBLIC_KEY_P);
 

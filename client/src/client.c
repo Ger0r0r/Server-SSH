@@ -34,6 +34,9 @@ int Do_task(connection * data, input enter){
 
 			data->status = Connection_attempt(data->my, &data->admin);
 
+			char * hey = "@Hey admin!\n";
+			sendto(data->sock_fd, (const char *)hey, strlen(hey), MSG_CONFIRM, (const struct sockaddr *)&data->admin, sizeof(data->admin));
+
 			Preparing_numeral_keys(data->sock_fd, data->admin);
 		}
 		
