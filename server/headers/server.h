@@ -15,6 +15,7 @@
 #include <openssl/conf.h>
 #include <openssl/evp.h>
 #include <openssl/err.h>
+#include <time.h>
 
 #define SSI struct sockaddr_in
 
