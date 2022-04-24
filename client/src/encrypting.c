@@ -31,22 +31,22 @@ void Preparing_numeral_keys(int sock_fd, SSI admin){
 	size_t A1 = atoi(place_A1 + 1);
 	size_t A2 = atoi(place_A2 + 1);
 
-	printf("Get:\nG = %d\nP = %d\n", KEY_G, KEY_P);
-	printf("Get:\nA1 = %d\nA2 = %d\n", A1, A2);
+	printf("Get:\nG = %zu\nP = %zu\n", KEY_G, KEY_P);
+	printf("Get:\nA1 = %zu\nA2 = %zu\n", A1, A2);
 
 	size_t B1 = Speed_degree_with_mod(KEY_G, b1, KEY_P);
 	size_t B2 = Speed_degree_with_mod(KEY_G, b2, KEY_P);
 
-	printf("Get:\nB1 = %d\nB2 = %d\n", B1, B2);
+	printf("Get:\nB1 = %zu\nB2 = %zu\n", B1, B2);
 
 	size_t K1 = Speed_degree_with_mod(KEY_G, A1, KEY_P);
 	size_t K2 = Speed_degree_with_mod(KEY_G, A2, KEY_P);
 
-	sprintf(answer, "@Secret info:%d:%d", B1, B2);
+	sprintf(answer, "@Secret info:%zu:%zu", B1, B2);
 
 	sendto(sock_fd, (const char *)answer, strlen(answer), MSG_CONFIRM, (const struct sockaddr *)&admin, sizeof(admin));
 
-	printf("KEYS:\n%d\n%d\n", K1, K2);
+	printf("KEYS:\n%zu\n%zu\n", K1, K2);
 }
 
 void Encryption(){
