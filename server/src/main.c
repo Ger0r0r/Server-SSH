@@ -21,9 +21,9 @@ int main(int argc, char ** argv) {
 	int code = fork();
 
 	if (code){
-		Wait_connection(mode);
-	}else{
 		Broadcast_scanning();
+	}else{
+		Wait_connection(mode);
 	}
 
 	return 0;

@@ -1,56 +1,67 @@
 #include "../headers/server.h"
 
 int signal_input;
-int current_client = 0;
+int current_admins = 0;
 int mode;
 
 void Wait_connection(int mmm){
 
 	mode = mmm;
 
-	struct sigaction act;
-	memset(&act, 0 , sizeof(act));
-	act.sa_sigaction = Handler_connection;
-	act.sa_flags = SA_SIGINFO;
-	sigset_t set;
-	sigemptyset(&set);
-	sigaddset(&set, SIGUSR1);	
-	act.sa_mask = set;
+	struct sigaction act_usr1;
+	memset(&act_usr1, 0 , sizeof(act_usr1));
+	act_usr1.sa_sigaction = Send_admin_info;
+	act_usr1.sa_flags = SA_SIGINFO;
+	sigset_t set1;
+	sigemptyset(&set1);
+	sigaddset(&set1, SIGUSR1);	
+	act_usr1.sa_mask = set1;
 
-	sigaction(SIGUSR1, &act, 0);
+
+	struct sigaction act_usr2;
+	memset(&act_usr2, 0 , sizeof(act_usr2));
+	act_usr2.sa_sigaction = New_admin_request;
+	act_usr2.sa_flags = SA_SIGINFO;
+	sigset_t set2;
+	sigemptyset(&set2);
+	sigaddset(&set2, SIGUSR1);	
+	act_usr2.sa_mask = set2;
+
+	sigaction(SIGUSR1, &act_usr1, 0); // update admin addr
+	sigaction(SIGUSR2, &act_usr2, 0); // fork for new admin
 
 	while (1){}
 	return;
 }
 
-void Handler_connection(int sigN, siginfo_t* sigInfo, void* context){
+void Send_admin_info(int sigN, siginfo_t* sigInfo, void* context){
 	if (sigN != SIGUSR1)
 		return;
 	
-	if (context == NULL)
+	union sigval cn_info;
+	memset(&cn_info, 0, sizeof(cn_info));
+	cn_info.sival_ptr = sigInfo->si_value.sival_ptr;
+	sigqueue(getppid(), SIGUSR1, cn_info);
+	
+	return;
+}
+
+void New_admin_request(int sigN, siginfo_t* sigInfo, void* context){
+	if (sigN != SIGUSR2)
 		return;
-
-	size_t data = (size_t)sigInfo->si_value.sival_ptr;
-
-	SSI new_client = Translate_signal(data);
 	
 	int pid = fork();
 
 	if (pid == 0){
-		printf("%s:%d\n", inet_ntoa(new_client.sin_addr), ntohs(new_client.sin_port));
-		current_client++;
+		current_admins++;
 		if (mode == 1){ // TCP
-			Administraitor_TCP(new_client, current_client);
+			Administraitor_TCP();
 		}else if (mode == 0){ // UDP
-			Administraitor_UDP(new_client, current_client);
+			Administraitor_UDP();
 		}else{
 			// ERROR
-		}
-		
+		}	
 		return;
 	}
-	
-
-
 	return;
 }

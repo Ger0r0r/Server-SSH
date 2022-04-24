@@ -31,13 +31,14 @@ void Start_connection(SSI new_cn);
 void Update_admin_info(int sigN, siginfo_t* sigInfo, void* context);
 
 void Wait_connection(int mmm);
-void Handler_connection(int sigN, siginfo_t* sigInfo, void* context);
+void Send_admin_info(int sigN, siginfo_t* sigInfo, void* context);
+void New_admin_request(int sigN, siginfo_t* sigInfo, void* context);
 
 size_t Encrypt_signal(SSI data);
 SSI Translate_signal(size_t data);
 
-void Administraitor_TCP(SSI client, int ccl);
-void Administraitor_UDP(SSI client, int ccl);
+void Administraitor_TCP();
+void Administraitor_UDP();
 
 void Preparing_keys(int sock_fd, SSI client);
 void Encryption();

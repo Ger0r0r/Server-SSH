@@ -7,7 +7,7 @@ int Connection_attempt(SSI own_addr){
 	if (ret){
 		
 	}else{
-		printf("\n\tConnection failed\n");
+		printf("\n\tConnection failed\n\n");
 	}
 	return 0;
 }

@@ -15,10 +15,8 @@ void Broadcast_scanning(){
 
 	sigaction(SIGUSR1, &act, 0);
 
-
-
 	char buf[MAX_COMMAND_LENGHT] = {0};
-	char buf_answer[MAX_COMMAND_LENGHT] = "@Wait for administraitor\n";
+	char buf_answer[MAX_COMMAND_LENGHT] = {0};
 
 	int sock_fd_rcv, sock_fd_snd;
 	SSI serv_addr, cli_addr;
@@ -49,7 +47,7 @@ void Broadcast_scanning(){
 		printf("Got message from broadcast, ip = %s, port = %d\nMessage : %s\n",
 			inet_ntoa(cli_addr.sin_addr), ntohs(cli_addr.sin_port), buf);
 
-		Start_connection(cli_addr);
+		sprintf(buf_answer, "@Your administraitor:%s:%d\n", inet_ntoa(adm_addr.sin_addr), ntohs(adm_addr.sin_port));
 
 		sock_fd_snd = socket(AF_INET, SOCK_DGRAM, 0);
 		sendto(sock_fd_snd, buf_answer, strlen(buf_answer), MSG_CONFIRM, (const struct sockaddr *) &cli_addr, sizeof cli_addr);
@@ -57,18 +55,6 @@ void Broadcast_scanning(){
 		memset(buf, 0, sizeof buf);
 	}
 	close(sock_fd_rcv);
-}
-
-void Start_connection(SSI new_cn){
-
-	union sigval cn_info;
-	memset(&cn_info, 0, sizeof(cn_info));
-
-	size_t builder_ptr = Encrypt_signal(new_cn);
-
-	cn_info.sival_ptr = (void*)builder_ptr;
-
-	sigqueue(getppid(), SIGUSR1, cn_info);
 }
 
 void Update_admin_info(int sigN, siginfo_t* sigInfo, void* context){
@@ -80,7 +66,8 @@ void Update_admin_info(int sigN, siginfo_t* sigInfo, void* context){
 
 	size_t data = (size_t)sigInfo->si_value.sival_ptr;
 
-	SSI adm_addr = Translate_signal(data);
+	adm_addr = Translate_signal(data);
+	adm_addr.sin_family = AF_INET;
 
 	return;
 }
