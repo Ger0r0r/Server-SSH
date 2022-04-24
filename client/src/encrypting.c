@@ -2,16 +2,16 @@
 
 void Preparing_numeral_keys(int sock_fd, SSI admin){
 
+	int n;
+	unsigned int len;
+	char admin_message[MAX_COMMAND_LENGHT] = {0};
+	n = recvfrom(sock_fd, (char *)admin_message, MAX_COMMAND_LENGHT, MSG_WAITALL, (struct sockaddr *)&admin, &len);
+	admin_message[n] = '\0';
+
 	int b1 = rand() / 0b1111111111111111;
 	int b2 = rand() / 0b1111111111111111;
 
-	char admin_message[MAX_COMMAND_LENGHT] = {0};
 	char answer[MAX_COMMAND_LENGHT] = {0};
-
-	int n;
-	unsigned int len;
-	n = recvfrom(sock_fd, (char *)admin_message, MAX_COMMAND_LENGHT, MSG_WAITALL, (struct sockaddr *)&admin, &len);
-	admin_message[n] = '\0';
 
 	// Message form: @You are not alone!:__P_KEY_G__:__P_KEY_P__:__A1__:__A2__
 	
