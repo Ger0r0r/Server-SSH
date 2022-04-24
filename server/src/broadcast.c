@@ -46,10 +46,9 @@ void Broadcast_scanning(){
 		recvfrom(sock_fd_rcv, buf, sizeof(buf), MSG_WAITALL,
 				(struct sockaddr *) &cli_addr, &len);
 
-		printf("Got message from broadcast, ip = %s, port = %d\nMessage : %s\n",
-			inet_ntoa(cli_addr.sin_addr), ntohs(cli_addr.sin_port), buf);
+		printf("Got message from broadcast, ip = %s, port = %d\nMessage : %s\n", inet_ntoa(cli_addr.sin_addr), ntohs(cli_addr.sin_port), buf);
 
-		sprintf(buf_answer, "@Your administraitor:%s:%d\n", inet_ntoa(adm_addr.sin_addr), ntohs(adm_addr.sin_port));
+		sprintf(buf_answer, "@Your administraitor:%d\n", ntohs(adm_addr.sin_port));
 
 		sock_fd_snd = socket(AF_INET, SOCK_DGRAM, 0);
 		sendto(sock_fd_snd, buf_answer, strlen(buf_answer), MSG_CONFIRM, (const struct sockaddr *) &cli_addr, sizeof cli_addr);

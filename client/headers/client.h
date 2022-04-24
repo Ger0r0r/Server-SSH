@@ -30,7 +30,7 @@ input Read_input();
 int Do_task(SSI own_addr, input enter);
 
 int Connection_attempt(SSI own_addr);
-int Broadcast_find(SSI own_addr);
+int Broadcast_find(SSI own_addr, SSI * ret_addr);
 
 
 #endif

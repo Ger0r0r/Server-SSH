@@ -2,10 +2,13 @@
 
 int Connection_attempt(SSI own_addr){
 
-	int ret = Broadcast_find(own_addr);
+	SSI adm_addr;
+	memset(&adm_addr, 0, sizeof(adm_addr));
+
+	int ret = Broadcast_find(own_addr, &adm_addr);
 
 	if (ret){
-		
+		printf("Get admin %s:%d\n", inet_ntoa(adm_addr.sin_addr), ntohs(adm_addr.sin_port));
 	}else{
 		printf("\n\tConnection failed\n\n");
 	}
@@ -13,7 +16,7 @@ int Connection_attempt(SSI own_addr){
 }
 
 
-int Broadcast_find(SSI own_addr){
+int Broadcast_find(SSI own_addr, SSI * ret_addr){
 	char buf[MAX_COMMAND_LENGHT] = {0};
 
 	sprintf(buf, "@Hello! port:%d", htons(own_addr.sin_port));
@@ -54,6 +57,14 @@ int Broadcast_find(SSI own_addr){
 
 		if (n && (strncmp(buf, "@Your administraitor:\n", 20) == 0)){
 			printf("\tGet answer from server: ip = %s\n\tMessage : %s\n", inet_ntoa(serv_addr.sin_addr), buf);
+
+			char * point = strchr(buf, ':');
+			point++;
+
+			ret_addr->sin_family = AF_INET;
+			ret_addr->sin_addr = serv_addr.sin_addr;
+			ret_addr->sin_port = atoi(point);
+
 			return 1;
 		}
 	}
