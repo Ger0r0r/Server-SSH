@@ -12,6 +12,8 @@ void Preparing_numeral_keys(int sock_fd, SSI client){
 	size_t A1 = Speed_degree_with_mod(PUBLIC_KEY_G, a1, PUBLIC_KEY_P);
 	size_t A2 = Speed_degree_with_mod(PUBLIC_KEY_G, a2, PUBLIC_KEY_P);
 
+	printf("Get:\nA1 = %zu\nA2 = %zu\n", A1, A2);
+
 	char client_message[MAX_COMMAND_LENGHT] = {0};
 	char greetings[MAX_COMMAND_LENGHT] = {0};
 
@@ -32,6 +34,9 @@ void Preparing_numeral_keys(int sock_fd, SSI client){
 
 	size_t B1 = atoi(place_B1 + 1);
 	size_t B2 = atoi(place_B2 + 1);
+
+	printf("Get:\nB1 = %zu\nB2 = %zu\n", B1, B2);
+
 	size_t K1 = Speed_degree_with_mod(PUBLIC_KEY_G, B1, PUBLIC_KEY_P);
 	size_t K2 = Speed_degree_with_mod(PUBLIC_KEY_G, B2, PUBLIC_KEY_P);
 
