@@ -1,6 +1,6 @@
 #include "../headers/server.h"
 
-SSI adm_addr, cli_addr;
+SSI admin_addr, cli_addr;
 
 void Administraitor_UDP(){
 	
@@ -13,13 +13,13 @@ void Administraitor_UDP(){
 		exit(EXIT_FAILURE);
 	}
 	
-	memset(&adm_addr, 0, sizeof(adm_addr));
+	memset(&admin_addr, 0, sizeof(admin_addr));
 	memset(&cli_addr, 0, sizeof(cli_addr));
 	
 	// Filling server information
-	adm_addr.sin_family = AF_INET; // IPv4
-	adm_addr.sin_addr.s_addr = INADDR_ANY;
-	adm_addr.sin_port = htons(BROADCAST_PORT);
+	admin_addr.sin_family = AF_INET; // IPv4
+	admin_addr.sin_addr.s_addr = INADDR_ANY;
+	admin_addr.sin_port = htons(BROADCAST_PORT);
 	
 	// Bind the socket with the server address
 
@@ -29,14 +29,14 @@ void Administraitor_UDP(){
 	while (ret_code < 0){
 		addition_port++;
 
-		adm_addr.sin_family = AF_INET; // IPv4
-		adm_addr.sin_addr.s_addr = INADDR_ANY;
-		adm_addr.sin_port = htons(BROADCAST_PORT + addition_port);
+		admin_addr.sin_family = AF_INET; // IPv4
+		admin_addr.sin_addr.s_addr = INADDR_ANY;
+		admin_addr.sin_port = htons(BROADCAST_PORT + addition_port);
 	
-		ret_code = bind(sock_fd_adm, (const struct sockaddr *)&adm_addr, sizeof(adm_addr));
+		ret_code = bind(sock_fd_adm, (const struct sockaddr *)&admin_addr, sizeof(admin_addr));
 	}
 
-	size_t mine_info = Encrypt_signal(adm_addr);
+	size_t mine_info = Encrypt_signal(admin_addr);
 
 	union sigval cn_info;
 	memset(&cn_info, 0, sizeof(cn_info));
