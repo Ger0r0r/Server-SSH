@@ -21,15 +21,20 @@ input Read_input(){
 	return ret;
 }
 
-int Do_task(SSI own_addr, input enter){
+int Do_task(connection * data, input enter){
 	int ret;
 
 	if (strcmp("@exit",enter.cmd) == 0){
 		ret = 0;
 	}else if (strcmp("@connect",enter.cmd) == 0){
+		if (data->status){
+			printf("\n\n\tConnection already exists\n\n");
+		}
+		
 		printf("\n\tTry to find connection...\n\n");
 
-		Connection_attempt(own_addr);
+		data->status = Connection_attempt(data->my, &data->admin);
+
 		
 
 		ret = 1;

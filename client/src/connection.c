@@ -1,14 +1,14 @@
 #include "../headers/client.h"
 
-int Connection_attempt(SSI own_addr){
+int Connection_attempt(SSI own_addr, SSI * adm_addr){
 
-	SSI adm_addr;
-	memset(&adm_addr, 0, sizeof(adm_addr));
+	memset(adm_addr, 0, sizeof(*adm_addr));
 
-	int ret = Broadcast_find(own_addr, &adm_addr);
+	int ret = Broadcast_find(own_addr, adm_addr);
 
 	if (ret){
-		printf("Get admin %s:%d\n", inet_ntoa(adm_addr.sin_addr), ntohs(adm_addr.sin_port));
+		printf("Get admin %s:%d\n", inet_ntoa(adm_addr->sin_addr), ntohs(adm_addr->sin_port));
+		return 1;
 	}else{
 		printf("\n\tConnection failed\n\n");
 	}

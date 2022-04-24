@@ -23,18 +23,19 @@ int main(int argc, char ** argv) {
 		exit(0);
 	}
 
-	SSI own_addr = {};
-	memset(&own_addr, 0, sizeof(own_addr));
-	own_addr.sin_family = AF_INET;
-	own_addr.sin_port = htons(OWN_PORT);
-	own_addr.sin_addr.s_addr = htonl(INADDR_ANY);
+	connection con_data;
+	memset(&con_data, 0, sizeof(con_data));
+	con_data.my.sin_family = AF_INET;
+	con_data.my.sin_port = htons(OWN_PORT);
+	con_data.my.sin_addr.s_addr = htonl(INADDR_ANY);
+	con_data.status = 0;
 	
-	if ( bind(sock_fd_own, (struct sockaddr *)&own_addr, sizeof(own_addr)) < 0 ){
+	if ( bind(sock_fd_own, (struct sockaddr *)&con_data.my, sizeof(con_data.my)) < 0 ){
 		perror("bind failed");
 		exit(EXIT_FAILURE);
 	}
 
-	printf("OWN ip = %s, port = %d\n", inet_ntoa(own_addr.sin_addr), ntohs(own_addr.sin_port));
+	printf("OWN ip = %s, port = %d\n", inet_ntoa(con_data.my.sin_addr), ntohs(con_data.my.sin_port));
 
 	int code = 1;
 	input enter;
@@ -42,7 +43,7 @@ int main(int argc, char ** argv) {
 	while (code){
 		printf("> ");
 		enter = Read_input();
-		code = Do_task(own_addr, enter);
+		code = Do_task(&con_data, enter);
 	}
 
 	return 0;

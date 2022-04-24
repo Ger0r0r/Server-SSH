@@ -1,6 +1,6 @@
 #include "../headers/server.h"
 
-SSI admin_addr, cli_addr;
+SSI admin_addr, client_addr;
 
 void Administraitor_UDP(){
 	
@@ -14,7 +14,7 @@ void Administraitor_UDP(){
 	}
 	
 	memset(&admin_addr, 0, sizeof(admin_addr));
-	memset(&cli_addr, 0, sizeof(cli_addr));
+	memset(&client_addr, 0, sizeof(client_addr));
 	
 	// Filling server information
 	admin_addr.sin_family = AF_INET; // IPv4
@@ -22,7 +22,6 @@ void Administraitor_UDP(){
 	admin_addr.sin_port = htons(BROADCAST_PORT);
 	
 	// Bind the socket with the server address
-
 	int ret_code = -1;
 	int addition_port = 0;
 
@@ -44,21 +43,15 @@ void Administraitor_UDP(){
 	sigqueue(getppid(), SIGUSR1, cn_info);
 	
 	
+	int n;
+	socklen_t len = sizeof(client_addr);
+	memset(buf, 0, sizeof(buf));
+	n = recvfrom(sock_fd_adm, (char *)buf, MAX_COMMAND_LENGHT, MSG_WAITALL, (struct sockaddr *)&client_addr, &len);
 
-	
+	kill(getppid(), SIGUSR2);
 
+	Preparing_numeral_keys(sock_fd_adm, client_addr);
 
-
-	//int len, n;
-
-	//len = sizeof(cli_addr); //len is value/result
-
-	//n = recvfrom(sockfd, (char *)buffer, MAXLINE, MSG_WAITALL, ( struct sockaddr *) &cli_addr, &len);
-	//buffer[n] = '\0';
-	//printf("Client : %s\n", buffer);
-	//sendto(sockfd, (const char *)hello, strlen(hello), MSG_CONFIRM, (const struct sockaddr *) &cli_addr, len);
-	//printf("Hello message sent.\n");
-	
 	return;
 
 

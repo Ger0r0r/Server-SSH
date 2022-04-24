@@ -11,7 +11,10 @@
 #include <netinet/in.h>
 #include <arpa/inet.h>
 #include <unistd.h>
-#include <fcntl.h> 
+#include <fcntl.h>
+#include <openssl/conf.h>
+#include <openssl/evp.h>
+#include <openssl/err.h>
 
 #define SSI struct sockaddr_in
 
@@ -20,6 +23,7 @@
 #define ARRAY_SIZE_FOR_0BINT 32
 #define PUBLIC_KEY_P 9887
 #define PUBLIC_KEY_G 7
+#define TIMEOUT_BEFORE_SEND_KEYS 100000
 
 typedef struct {
 	char cmd[MAX_COMMAND_LENGHT];
@@ -40,7 +44,7 @@ SSI Translate_signal(size_t data);
 void Administraitor_TCP();
 void Administraitor_UDP();
 
-void Preparing_keys(int sock_fd, SSI client);
+void Preparing_numeral_keys(int sock_fd, SSI client);
 void Encryption();
 void Decoding();
 int Speed_degree_with_mod(int g, int x, int p);

@@ -26,11 +26,22 @@ typedef struct {
 	char arg[MAX_COMMAND_LENGHT];
 }input;
 
-input Read_input();
-int Do_task(SSI own_addr, input enter);
+typedef struct{
+	SSI admin;
+	SSI my;
+	int status; // 1 - connected; 0 - disconnected
+}connection;
 
-int Connection_attempt(SSI own_addr);
+input Read_input();
+int Do_task(connection * data, input enter);
+
+int Connection_attempt(SSI own_addr, SSI * adm_addr);
 int Broadcast_find(SSI own_addr, SSI * ret_addr);
+
+void Preparing_numeral_keys(int sock_fd, SSI admin);
+void Encryption();
+void Decoding();
+int Speed_degree_with_mod(int g, int x, int p);
 
 
 #endif
