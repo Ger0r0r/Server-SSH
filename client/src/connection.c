@@ -14,7 +14,8 @@ int Connection_attempt(){
 
 
 int Broadcast_find(){
-	char * buf = "@Give_info";
+	char buf[MAX_COMMAND_LENGHT] = "@Give_info";
+
 	struct sockaddr_in serv_addr;
 	memset(&serv_addr, 0, sizeof(serv_addr));
 
@@ -43,7 +44,9 @@ int Broadcast_find(){
 		socklen_t len = sizeof(serv_addr);
 		n = recvfrom(sock_fd, buf, sizeof(buf), MSG_DONTWAIT, (struct sockaddr *) &serv_addr, &len);
 		
-		if (n){
+		printf("\tGet: %s\n", buf);
+
+		if (n && (strncmp(buf, "@Wait for administraitor\n", 18) == 0)){
 			printf("\tGet answer from server: ip = %s\n\tMessage : %s\n", inet_ntoa(serv_addr.sin_addr), buf);
 			return 1;
 		}
