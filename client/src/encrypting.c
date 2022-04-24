@@ -1,6 +1,6 @@
 #include "../headers/client.h"
 
-void Preparing_numeral_keys(int sock_fd, SSI admin){
+void Preparing_numeral_keys(int sock_fd, SSI admin, size_t * K1, size_t * K2){
 
 	printf("GO SECURE!!!\n");
 
@@ -43,14 +43,15 @@ void Preparing_numeral_keys(int sock_fd, SSI admin){
 
 	printf("Get:\nB1 = %zu\nB2 = %zu\n", B1, B2);
 
-	size_t K1 = Speed_degree_with_mod(A1, b1, KEY_P);
-	size_t K2 = Speed_degree_with_mod(A2, b2, KEY_P);
+	//printf("\n\n\n\nSUKAA\nA1 = %zu\nb1 = %zu\nP = %zu\n", A1, b1, KEY_P);
+	*K1 = Speed_degree_with_mod(A1, b1, KEY_P);
+	*K2 = Speed_degree_with_mod(A2, b2, KEY_P);
 
 	sprintf(answer, "@Secret info:%zu:%zu", B1, B2);
 
 	sendto(sock_fd, (const char *)answer, strlen(answer), MSG_CONFIRM, (const struct sockaddr *)&admin, sizeof(admin));
 
-	printf("KEYS:\n%zu\n%zu\n", K1, K2);
+	printf("KEYS:\n%zu\n%zu\n", *K1, *K2);	
 }
 
 void Encryption(){
@@ -70,4 +71,29 @@ size_t Speed_degree_with_mod(size_t g, size_t x, size_t p){ // return = g^x % p
 
 	size_t y = Speed_degree_with_mod(g, x / 2, p);
 	return (y * y) % p;
+}
+
+void Make_keys(size_t K1, size_t K2, char * key, char * IV){
+	char A[MAX_COMMAND_LENGHT] = {0};
+	char B[MAX_COMMAND_LENGHT] = {0};
+
+	sprintf(A, "%zu%zu%zu%zu", K1, K2, K1, K2);
+	sprintf(B, "%zu%zu%zu%zu", K2, K1, K2, K1);
+
+	printf("A: %s\n", A);
+	printf("B: %s\n", B);
+	
+	strcat(key, A);
+	strcat(IV, B);
+
+	for (size_t i = 32; i < MAX_COMMAND_LENGHT; i++){
+		key[i] = '\0';
+	}
+	
+	for (size_t i = 16; i < MAX_COMMAND_LENGHT; i++){
+		IV[i] = '\0';
+	}
+
+	printf("key: %s\n", key);
+	printf("IV: %s\n", IV);
 }

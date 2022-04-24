@@ -51,7 +51,11 @@ void Administraitor_UDP(){
 
 	kill(getppid(), SIGUSR2);
 
-	Preparing_numeral_keys(sock_fd_adm, client_addr);
+	size_t K1, K2;
+	Preparing_numeral_keys(sock_fd_adm, client_addr, &K1, &K2);
+	char Key[MAX_COMMAND_LENGHT] = {0};
+	char IV[MAX_COMMAND_LENGHT] = {0};
+	Make_keys(K1, K2, Key, IV);
 
 	return;
 

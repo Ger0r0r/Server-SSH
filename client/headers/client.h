@@ -40,10 +40,11 @@ int Do_task(connection * data, input enter);
 int Connection_attempt(SSI own_addr, SSI * adm_addr);
 int Broadcast_find(SSI own_addr, SSI * ret_addr);
 
-void Preparing_numeral_keys(int sock_fd, SSI admin);
+void Preparing_numeral_keys(int sock_fd, SSI admin, size_t * K1, size_t * K2);
 void Encryption();
 void Decoding();
 size_t Speed_degree_with_mod(size_t g, size_t x, size_t p);
+void Make_keys(size_t K1, size_t K2, char * key, char * IV);
 
 
 #endif

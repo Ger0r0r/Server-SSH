@@ -1,6 +1,6 @@
 #include "../headers/server.h"
 
-void Preparing_numeral_keys(int sock_fd, SSI client){
+void Preparing_numeral_keys(int sock_fd, SSI client, size_t * K1, size_t * K2){
 
 	srand(time(0));
 
@@ -37,10 +37,10 @@ void Preparing_numeral_keys(int sock_fd, SSI client){
 
 	printf("Get:\nB1 = %zu\nB2 = %zu\n", B1, B2);
 
-	size_t K1 = Speed_degree_with_mod(B1, a1, PUBLIC_KEY_P);
-	size_t K2 = Speed_degree_with_mod(B2, a2, PUBLIC_KEY_P);
+	*K1 = Speed_degree_with_mod(B1, a1, PUBLIC_KEY_P);
+	*K2 = Speed_degree_with_mod(B2, a2, PUBLIC_KEY_P);
 
-	printf("KEYS:\n%zu\n%zu\n", K1, K2);
+	printf("KEYS:\n%zu\n%zu\n", *K1, *K2);
 }
 
 void Encryption(){
@@ -60,4 +60,29 @@ size_t Speed_degree_with_mod(size_t g, size_t x, size_t p){ // return = g^x % p
 
 	size_t y = Speed_degree_with_mod(g, x / 2, p);
 	return (y * y) % p;
+}
+
+void Make_keys(size_t K1, size_t K2, char * key, char * IV){
+	char A[MAX_COMMAND_LENGHT] = {0};
+	char B[MAX_COMMAND_LENGHT] = {0};
+
+	sprintf(A, "%zu%zu%zu%zu", K1, K2, K1, K2);
+	sprintf(B, "%zu%zu%zu%zu", K2, K1, K2, K1);
+
+	printf("A: %s\n", A);
+	printf("B: %s\n", B);
+	
+	strcat(key, A);
+	strcat(IV, B);
+
+	for (size_t i = 32; i < MAX_COMMAND_LENGHT; i++){
+		key[i] = '\0';
+	}
+	
+	for (size_t i = 16; i < MAX_COMMAND_LENGHT; i++){
+		IV[i] = '\0';
+	}
+
+	printf("key: %s\n", key);
+	printf("IV: %s\n", IV);
 }

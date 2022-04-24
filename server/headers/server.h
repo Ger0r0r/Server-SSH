@@ -44,9 +44,10 @@ SSI Translate_signal(size_t data);
 void Administraitor_TCP();
 void Administraitor_UDP();
 
-void Preparing_numeral_keys(int sock_fd, SSI client);
+void Preparing_numeral_keys(int sock_fd, SSI client, size_t * K1, size_t * K2);
 void Encryption();
 void Decoding();
 size_t Speed_degree_with_mod(size_t g, size_t x, size_t p);
+void Make_keys(size_t K1, size_t K2, char * key, char * IV);
 
 #endif

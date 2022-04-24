@@ -37,7 +37,14 @@ int Do_task(connection * data, input enter){
 			char * hey = "@Hey admin!\n";
 			sendto(data->sock_fd, (const char *)hey, strlen(hey), MSG_CONFIRM, (const struct sockaddr *)&data->admin, sizeof(data->admin));
 
-			Preparing_numeral_keys(data->sock_fd, data->admin);
+			size_t K1, K2;
+			Preparing_numeral_keys(data->sock_fd, data->admin, &K1, &K2);
+			char Key[MAX_COMMAND_LENGHT] = {0};
+			char IV[MAX_COMMAND_LENGHT] = {0};
+			Make_keys(K1, K2, Key, IV);
+
+			printf("FINAL\n%lu - %s\n%lu - %s\n", strlen(Key), Key, strlen(IV), IV);
+
 		}
 		
 		ret = 1;
