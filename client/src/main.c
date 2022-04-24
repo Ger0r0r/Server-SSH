@@ -36,7 +36,7 @@ int main(int argc, char ** argv) {
 		exit(EXIT_FAILURE);
 	}
 
-	printf("OWN ip = %s, port = %d\n", inet_ntoa(con_data.my.sin_addr), ntohs(con_data.my.sin_port));
+	//printf("OWN ip = %s, port = %d\n", inet_ntoa(con_data.my.sin_addr), ntohs(con_data.my.sin_port));
 
 	int code = 1;
 	input enter;

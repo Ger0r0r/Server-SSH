@@ -27,15 +27,32 @@ typedef struct {
 	char arg[MAX_COMMAND_LENGHT];
 }input;
 
+typedef struct {
+	char * login;
+	char * password;
+	char * key;
+	char * IV;
+	char * key_old;
+	char * IV_old;
+}user;
+
 typedef struct{
 	SSI admin;
 	SSI my;
 	int sock_fd;
-	int status; // 1 - connected; 0 - disconnected
+	int status; // 2 - login; 1 - connected; 0 - disconnected
+	user info_user;
 }connection;
 
 input Read_input();
 int Do_task(connection * data, input enter);
+
+int Command_exit(connection * data);
+int Command_login(connection * data, char * log_pas);
+int Command_connect(connection * data);
+
+int Check_for_old_keys(connection * data);
+void Log_in_session(connection * data);
 
 int Connection_attempt(SSI own_addr, SSI * adm_addr);
 int Broadcast_find(SSI own_addr, SSI * ret_addr);
