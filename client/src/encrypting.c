@@ -1,11 +1,9 @@
-#include "../headers/server.h"
+#include "../headers/client.h"
 
 void Preparing_numeral_keys(int sock_fd, SSI admin){
 
 	int b1 = rand() / 0b1111111111111111;
 	int b2 = rand() / 0b1111111111111111;
-	int B1 = Speed_degree_with_mod(PUBLIC_KEY_G, a1, PUBLIC_KEY_P);
-	int B2 = Speed_degree_with_mod(PUBLIC_KEY_G, a2, PUBLIC_KEY_P);
 
 	char admin_message[MAX_COMMAND_LENGHT] = {0};
 	char answer[MAX_COMMAND_LENGHT] = {0};
@@ -21,11 +19,14 @@ void Preparing_numeral_keys(int sock_fd, SSI admin){
 	char * place_P = strchr(admin_message + 1, ':');
 	char * place_A1 = strchr(admin_message + 1, ':');
 	char * place_A2 = strchr(admin_message + 1, ':');
-
+	
 	int KEY_G = atoi(place_G + 1);
 	int KEY_P = atoi(place_P + 1);
 	int A1 = atoi(place_A1 + 1);
 	int A2 = atoi(place_A2 + 1);
+
+	int B1 = Speed_degree_with_mod(KEY_G, b1, KEY_P);
+	int B2 = Speed_degree_with_mod(KEY_G, b2, KEY_P);
 
 	int K1 = Speed_degree_with_mod(KEY_G, A1, KEY_P);
 	int K2 = Speed_degree_with_mod(KEY_G, A2, KEY_P);
