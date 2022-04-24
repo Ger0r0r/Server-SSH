@@ -52,7 +52,7 @@ int Broadcast_find(SSI own_addr){
 		
 		//printf("\tGet: %s\n", buf);
 
-		if (n && (strncmp(buf, "@Wait for administraitor\n", 18) == 0)){
+		if (n && (strncmp(buf, "@Your administraitor:\n", 20) == 0)){
 			printf("\tGet answer from server: ip = %s\n\tMessage : %s\n", inet_ntoa(serv_addr.sin_addr), buf);
 			return 1;
 		}

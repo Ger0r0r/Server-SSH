@@ -30,6 +30,8 @@ void Wait_connection(int mmm){
 	sigaction(SIGUSR1, &act_usr1, 0); // update admin addr
 	sigaction(SIGUSR2, &act_usr2, 0); // fork for new admin
 
+	kill(getpid(), SIGUSR2);
+
 	while (1){}
 	return;
 }
