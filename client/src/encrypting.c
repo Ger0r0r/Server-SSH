@@ -15,7 +15,7 @@ void Preparing_numeral_keys(int sock_fd, SSI admin, size_t * K1, size_t * K2){
 	size_t b1 = rand() % 0b11111111111111111111111111111111;
 	size_t b2 = rand() % 0b11111111111111111111111111111111;
 
-	printf("Gen:\n%zu\n%zu\n", b1,b2);
+	//printf("Gen:\n%zu\n%zu\n", b1,b2);
 
 	char answer[MAX_COMMAND_LENGHT] = {0};
 
@@ -35,13 +35,13 @@ void Preparing_numeral_keys(int sock_fd, SSI admin, size_t * K1, size_t * K2){
 	size_t A1 = atoi(place_A1 + 1);
 	size_t A2 = atoi(place_A2 + 1);
 
-	printf("Get:\nG = %zu\nP = %zu\n", KEY_G, KEY_P);
-	printf("Get:\nA1 = %zu\nA2 = %zu\n", A1, A2);
+	//printf("Get:\nG = %zu\nP = %zu\n", KEY_G, KEY_P);
+	//printf("Get:\nA1 = %zu\nA2 = %zu\n", A1, A2);
 
 	size_t B1 = Speed_degree_with_mod(KEY_G, b1, KEY_P);
 	size_t B2 = Speed_degree_with_mod(KEY_G, b2, KEY_P);
 
-	printf("Get:\nB1 = %zu\nB2 = %zu\n", B1, B2);
+	//printf("Get:\nB1 = %zu\nB2 = %zu\n", B1, B2);
 
 	//printf("\n\n\n\nSUKAA\nA1 = %zu\nb1 = %zu\nP = %zu\n", A1, b1, KEY_P);
 	*K1 = Speed_degree_with_mod(A1, b1, KEY_P);
@@ -51,7 +51,7 @@ void Preparing_numeral_keys(int sock_fd, SSI admin, size_t * K1, size_t * K2){
 
 	sendto(sock_fd, (const char *)answer, strlen(answer), MSG_CONFIRM, (const struct sockaddr *)&admin, sizeof(admin));
 
-	printf("KEYS:\n%zu\n%zu\n", *K1, *K2);	
+	//printf("KEYS:\n%zu\n%zu\n", *K1, *K2);	
 }
 
 void Encryption(){
@@ -77,11 +77,11 @@ void Make_keys(size_t K1, size_t K2, char * key, char * IV){
 	char A[MAX_COMMAND_LENGHT] = {0};
 	char B[MAX_COMMAND_LENGHT] = {0};
 
-	sprintf(A, "%zu%zu%zu%zu", K1, K2, K1, K2);
-	sprintf(B, "%zu%zu%zu%zu", K2, K1, K2, K1);
+	sprintf(A, "%zu%zu%zu%zu%zu%zu%zu%zu", K1, K2, K1, K2, K1, K2, K1, K2);
+	sprintf(B, "%zu%zu%zu%zu%zu%zu%zu%zu", K2, K1, K2, K1, K2, K1, K2, K1);
 
-	printf("A: %s\n", A);
-	printf("B: %s\n", B);
+	//printf("A: %s\n", A);
+	//printf("B: %s\n", B);
 	
 	strcat(key, A);
 	strcat(IV, B);

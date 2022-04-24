@@ -7,12 +7,12 @@ void Preparing_numeral_keys(int sock_fd, SSI client, size_t * K1, size_t * K2){
 	size_t a1 = rand() % 0b11111111111111111111111111111111;
 	size_t a2 = rand() % 0b11111111111111111111111111111111;
 
-	printf("Gen:\n%zu\n%zu\n", a1,a2);	
+	//printf("Gen:\n%zu\n%zu\n", a1,a2);	
 
 	size_t A1 = Speed_degree_with_mod(PUBLIC_KEY_G, a1, PUBLIC_KEY_P);
 	size_t A2 = Speed_degree_with_mod(PUBLIC_KEY_G, a2, PUBLIC_KEY_P);
 
-	printf("Get:\nA1 = %zu\nA2 = %zu\n", A1, A2);
+	//printf("Get:\nA1 = %zu\nA2 = %zu\n", A1, A2);
 
 	char client_message[MAX_COMMAND_LENGHT] = {0};
 	char greetings[MAX_COMMAND_LENGHT] = {0};
@@ -35,7 +35,7 @@ void Preparing_numeral_keys(int sock_fd, SSI client, size_t * K1, size_t * K2){
 	size_t B1 = atoi(place_B1 + 1);
 	size_t B2 = atoi(place_B2 + 1);
 
-	printf("Get:\nB1 = %zu\nB2 = %zu\n", B1, B2);
+	//printf("Get:\nB1 = %zu\nB2 = %zu\n", B1, B2);
 
 	*K1 = Speed_degree_with_mod(B1, a1, PUBLIC_KEY_P);
 	*K2 = Speed_degree_with_mod(B2, a2, PUBLIC_KEY_P);
@@ -66,11 +66,11 @@ void Make_keys(size_t K1, size_t K2, char * key, char * IV){
 	char A[MAX_COMMAND_LENGHT] = {0};
 	char B[MAX_COMMAND_LENGHT] = {0};
 
-	sprintf(A, "%zu%zu%zu%zu", K1, K2, K1, K2);
-	sprintf(B, "%zu%zu%zu%zu", K2, K1, K2, K1);
+	sprintf(A, "%zu%zu%zu%zu%zu%zu%zu%zu", K1, K2, K1, K2, K1, K2, K1, K2);
+	sprintf(B, "%zu%zu%zu%zu%zu%zu%zu%zu", K2, K1, K2, K1, K2, K1, K2, K1);
 
-	printf("A: %s\n", A);
-	printf("B: %s\n", B);
+	//printf("A: %s\n", A);
+	//printf("B: %s\n", B);
 	
 	strcat(key, A);
 	strcat(IV, B);
