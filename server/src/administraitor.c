@@ -1,6 +1,6 @@
 #include "../headers/server.h"
 
-void Administraitor_UDP(connection client, int ccl){
+void Administraitor_UDP(SSI client, int ccl){
 
 	char buffer[MAX_COMMAND_LENGHT] = {0};
 
@@ -12,7 +12,7 @@ void Administraitor_UDP(connection client, int ccl){
 		exit(EXIT_FAILURE);
 	}
 
-	struct sockaddr_in admin_addr;
+	SSI admin_addr;
 	memset(&admin_addr, 0, sizeof(admin_addr));
 	admin_addr.sin_family = AF_INET;
 	admin_addr.sin_port = htons(BROADCAST_PORT + ccl);
@@ -23,11 +23,11 @@ void Administraitor_UDP(connection client, int ccl){
 		exit(EXIT_FAILURE);
 	}
 
-	struct sockaddr_in client_addr;
+	SSI client_addr;
 	memset(&client_addr, 0, sizeof(client_addr));
 	client_addr.sin_family = AF_INET;
-	client_addr.sin_port = client.port;
-	client_addr.sin_addr = client.addr;
+	client_addr.sin_port = client.sin_port;
+	client_addr.sin_addr = client.sin_addr;
 
 	Preparing_keys(sock_fd_adm, client_addr);
 
@@ -37,6 +37,6 @@ void Administraitor_UDP(connection client, int ccl){
 	
 }
 
-void Administraitor_TCP(connection client, int ccl){
+void Administraitor_TCP(SSI client, int ccl){
 	return;
 }

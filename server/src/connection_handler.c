@@ -32,12 +32,12 @@ void Handler_connection(int sigN, siginfo_t* sigInfo, void* context){
 
 	size_t data = (size_t)sigInfo->si_value.sival_ptr;
 
-	connection new_client = Translate_signal(data);
+	SSI new_client = Translate_signal(data);
 	
 	int pid = fork();
 
 	if (pid == 0){
-		printf("%s:%d\n", inet_ntoa(new_client.addr), ntohs(new_client.port));
+		printf("%s:%d\n", inet_ntoa(new_client.sin_addr), ntohs(new_client.sin_port));
 		current_client++;
 		if (mode == 1){ // TCP
 			Administraitor_TCP(new_client, current_client);
@@ -53,13 +53,4 @@ void Handler_connection(int sigN, siginfo_t* sigInfo, void* context){
 
 
 	return;
-}
-
-connection Translate_signal(size_t data){
-	connection temp;
-
-	temp.addr.s_addr = htonl(data & 0b11111111111111111111111111111111);
-	temp.port = htons((data >> 32) & 0b1111111111111111);
-
-	return temp;
 }

@@ -1,6 +1,6 @@
 #include "../headers/client.h"
 
-int Connection_attempt(struct sockaddr_in own_addr){
+int Connection_attempt(SSI own_addr){
 
 	int ret = Broadcast_find(own_addr);
 
@@ -13,13 +13,13 @@ int Connection_attempt(struct sockaddr_in own_addr){
 }
 
 
-int Broadcast_find(struct sockaddr_in own_addr){
+int Broadcast_find(SSI own_addr){
 	char buf[MAX_COMMAND_LENGHT] = {0};
 
 	sprintf(buf, "@Hello! port:%d", htons(own_addr.sin_port));
 
 
-	struct sockaddr_in serv_addr;
+	SSI serv_addr;
 	memset(&serv_addr, 0, sizeof(serv_addr));
 
 	int sock_fd;
@@ -45,6 +45,7 @@ int Broadcast_find(struct sockaddr_in own_addr){
 
 		sendto(sock_fd, buf, strlen(buf), MSG_CONFIRM, (const struct sockaddr *) &serv_addr, sizeof serv_addr);
 
+		usleep(TIME_BETWEEN_ATTEMPTS_FOR_CONNECTION);
 		// get
 		socklen_t len = sizeof(serv_addr);
 		n = recvfrom(sock_fd, buf, sizeof(buf), MSG_DONTWAIT, (struct sockaddr *) &serv_addr, &len);
@@ -55,7 +56,6 @@ int Broadcast_find(struct sockaddr_in own_addr){
 			printf("\tGet answer from server: ip = %s\n\tMessage : %s\n", inet_ntoa(serv_addr.sin_addr), buf);
 			return 1;
 		}
-		usleep(TIME_BETWEEN_ATTEMPTS_FOR_CONNECTION);
 	}
 	return 0;
 }

@@ -13,6 +13,8 @@
 #include <unistd.h>
 #include <fcntl.h> 
 
+#define SSI struct sockaddr_in
+
 #define MAX_COMMAND_LENGHT 1024
 #define BROADCAST_PORT 23456
 #define ARRAY_SIZE_FOR_0BINT 32
@@ -24,22 +26,20 @@ typedef struct {
 	char arg[MAX_COMMAND_LENGHT];
 }input;
 
-typedef struct {
-	struct in_addr addr;
-	in_port_t port;
-}connection;
-
 void Broadcast_scanning();
-void Start_connection(struct sockaddr_in new_cn);
+void Start_connection(SSI new_cn);
+void Update_admin_info(int sigN, siginfo_t* sigInfo, void* context);
 
 void Wait_connection(int mmm);
 void Handler_connection(int sigN, siginfo_t* sigInfo, void* context);
-connection Translate_signal(size_t data);
 
-void Administraitor_TCP(connection client, int ccl);
-void Administraitor_UDP(connection client, int ccl);
+size_t Encrypt_signal(SSI data);
+SSI Translate_signal(size_t data);
 
-void Preparing_keys(int sock_fd, struct sockaddr_in client);
+void Administraitor_TCP(SSI client, int ccl);
+void Administraitor_UDP(SSI client, int ccl);
+
+void Preparing_keys(int sock_fd, SSI client);
 void Encryption();
 void Decoding();
 int Speed_degree_with_mod(int g, int x, int p);

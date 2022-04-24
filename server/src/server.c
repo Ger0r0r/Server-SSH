@@ -4,7 +4,7 @@
 //	int sockfd;
 //	char buffer[MAX_COMMAND_LENGHT];
 //	char *hello = "Hello from server";
-//	struct sockaddr_in servaddr, cliaddr;
+//	SSI servaddr, cliaddr;
 	
 //	// Creating socket file descriptor
 //	if ( (sockfd = socket(AF_INET, SOCK_DGRAM, 0)) < 0 ) {

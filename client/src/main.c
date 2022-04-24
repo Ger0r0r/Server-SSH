@@ -23,7 +23,7 @@ int main(int argc, char ** argv) {
 		exit(0);
 	}
 
-	struct sockaddr_in own_addr = {};
+	SSI own_addr = {};
 	memset(&own_addr, 0, sizeof(own_addr));
 	own_addr.sin_family = AF_INET;
 	own_addr.sin_port = htons(OWN_PORT);

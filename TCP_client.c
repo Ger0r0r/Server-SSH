@@ -30,7 +30,7 @@ void func(int sockfd)
 int main()
 {
 	int sockfd, connfd;
-	struct sockaddr_in servaddr, cli;
+	SSI servaddr, cli;
 
 	// socket create and verification
 	sockfd = socket(AF_INET, SOCK_STREAM, 0);

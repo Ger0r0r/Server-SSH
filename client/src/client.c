@@ -21,7 +21,7 @@ input Read_input(){
 	return ret;
 }
 
-int Do_task(struct sockaddr_in own_addr, input enter){
+int Do_task(SSI own_addr, input enter){
 	int ret;
 
 	if (strcmp("@exit",enter.cmd) == 0){

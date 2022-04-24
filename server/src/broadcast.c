@@ -1,12 +1,27 @@
 #include "../headers/server.h"
 
+SSI adm_addr;
+
 void Broadcast_scanning(){
+
+	struct sigaction act;
+	memset(&act, 0 , sizeof(act));
+	act.sa_sigaction = Update_admin_info;
+	act.sa_flags = SA_SIGINFO;
+	sigset_t set;
+	sigemptyset(&set);
+	sigaddset(&set, SIGUSR1);	
+	act.sa_mask = set;
+
+	sigaction(SIGUSR1, &act, 0);
+
+
 
 	char buf[MAX_COMMAND_LENGHT] = {0};
 	char buf_answer[MAX_COMMAND_LENGHT] = "@Wait for administraitor\n";
 
 	int sock_fd_rcv, sock_fd_snd;
-	struct sockaddr_in serv_addr, cli_addr;
+	SSI serv_addr, cli_addr;
 	memset(&serv_addr, 0, sizeof(serv_addr));
 	memset(&cli_addr, 0, sizeof(cli_addr));
 
@@ -44,17 +59,28 @@ void Broadcast_scanning(){
 	close(sock_fd_rcv);
 }
 
-void Start_connection(struct sockaddr_in new_cn){
+void Start_connection(SSI new_cn){
 
 	union sigval cn_info;
 	memset(&cn_info, 0, sizeof(cn_info));
 
-	size_t builder_ptr = 0;
-
-	builder_ptr |= ntohl(new_cn.sin_addr.s_addr);
-	builder_ptr |= ((size_t)(ntohs(new_cn.sin_port))<<32);
+	size_t builder_ptr = Encrypt_signal(new_cn);
 
 	cn_info.sival_ptr = (void*)builder_ptr;
 
 	sigqueue(getppid(), SIGUSR1, cn_info);
+}
+
+void Update_admin_info(int sigN, siginfo_t* sigInfo, void* context){
+	if (sigN != SIGUSR1)
+		return;
+	
+	if (context == NULL)
+		return;
+
+	size_t data = (size_t)sigInfo->si_value.sival_ptr;
+
+	SSI adm_addr = Translate_signal(data);
+
+	return;
 }

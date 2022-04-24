@@ -1,6 +1,6 @@
 #include "../headers/server.h"
 
-void Preparing_keys(int sock_fd, struct sockaddr_in client){
+void Preparing_keys(int sock_fd, SSI client){
 	int a = rand() / 0b1111111111111111;
 	int A = Speed_degree_with_mod(PUBLIC_KEY_G, a, PUBLIC_KEY_P);
 

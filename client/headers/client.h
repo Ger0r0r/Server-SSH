@@ -13,6 +13,8 @@
 #include <fcntl.h>
 #include <signal.h>
 
+#define SSI struct sockaddr_in
+
 #define MAX_COMMAND_LENGHT 1024
 #define OWN_PORT 25575
 #define BROADCAST_PORT 23456
@@ -25,10 +27,10 @@ typedef struct {
 }input;
 
 input Read_input();
-int Do_task(struct sockaddr_in own_addr, input enter);
+int Do_task(SSI own_addr, input enter);
 
-int Connection_attempt(struct sockaddr_in own_addr);
-int Broadcast_find(struct sockaddr_in own_addr);
+int Connection_attempt(SSI own_addr);
+int Broadcast_find(SSI own_addr);
 
 
 #endif
