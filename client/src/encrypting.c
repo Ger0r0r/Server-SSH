@@ -10,8 +10,10 @@ void Preparing_numeral_keys(int sock_fd, SSI admin){
 	n = recvfrom(sock_fd, (char *)admin_message, MAX_COMMAND_LENGHT, MSG_WAITALL, (struct sockaddr *)&admin, &len);
 	admin_message[n] = '\0';
 
-	size_t b1 = rand() / 0b11111111111111111111111111111111;
-	size_t b2 = rand() / 0b11111111111111111111111111111111;
+	size_t b1 = rand() % 0b11111111111111111111111111111111;
+	size_t b2 = rand() % 0b11111111111111111111111111111111;
+
+	printf("Gen:\n%zu\n%zu\n", b1,b2);
 
 	char answer[MAX_COMMAND_LENGHT] = {0};
 
