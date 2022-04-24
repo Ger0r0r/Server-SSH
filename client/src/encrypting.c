@@ -9,7 +9,7 @@ void Preparing_numeral_keys(int sock_fd, SSI admin){
 	char admin_message[MAX_COMMAND_LENGHT] = {0};
 	n = recvfrom(sock_fd, (char *)admin_message, MAX_COMMAND_LENGHT, MSG_WAITALL, (struct sockaddr *)&admin, &len);
 	admin_message[n] = '\0';
-	
+
 	srand(time(0));
 
 	size_t b1 = rand() % 0b11111111111111111111111111111111;
@@ -43,8 +43,8 @@ void Preparing_numeral_keys(int sock_fd, SSI admin){
 
 	printf("Get:\nB1 = %zu\nB2 = %zu\n", B1, B2);
 
-	size_t K1 = Speed_degree_with_mod(KEY_G, A1, KEY_P);
-	size_t K2 = Speed_degree_with_mod(KEY_G, A2, KEY_P);
+	size_t K1 = Speed_degree_with_mod(A1, b1, KEY_P);
+	size_t K2 = Speed_degree_with_mod(A2, b2, KEY_P);
 
 	sprintf(answer, "@Secret info:%zu:%zu", B1, B2);
 

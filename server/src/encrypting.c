@@ -37,8 +37,8 @@ void Preparing_numeral_keys(int sock_fd, SSI client){
 
 	printf("Get:\nB1 = %zu\nB2 = %zu\n", B1, B2);
 
-	size_t K1 = Speed_degree_with_mod(PUBLIC_KEY_G, B1, PUBLIC_KEY_P);
-	size_t K2 = Speed_degree_with_mod(PUBLIC_KEY_G, B2, PUBLIC_KEY_P);
+	size_t K1 = Speed_degree_with_mod(B1, a1, PUBLIC_KEY_P);
+	size_t K2 = Speed_degree_with_mod(B2, a2, PUBLIC_KEY_P);
 
 	printf("KEYS:\n%zu\n%zu\n", K1, K2);
 }
