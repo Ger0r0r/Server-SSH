@@ -47,6 +47,6 @@ void Administraitor_UDP();
 void Preparing_numeral_keys(int sock_fd, SSI client);
 void Encryption();
 void Decoding();
-int Speed_degree_with_mod(int g, int x, int p);
+size_t Speed_degree_with_mod(int g, int x, int p);
 
 #endif

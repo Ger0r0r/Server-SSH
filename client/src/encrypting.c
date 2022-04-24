@@ -10,8 +10,8 @@ void Preparing_numeral_keys(int sock_fd, SSI admin){
 	n = recvfrom(sock_fd, (char *)admin_message, MAX_COMMAND_LENGHT, MSG_WAITALL, (struct sockaddr *)&admin, &len);
 	admin_message[n] = '\0';
 
-	int b1 = rand() / 0b11111111111111111111111111111111;
-	int b2 = rand() / 0b11111111111111111111111111111111;
+	size_t b1 = rand() / 0b11111111111111111111111111111111;
+	size_t b2 = rand() / 0b11111111111111111111111111111111;
 
 	char answer[MAX_COMMAND_LENGHT] = {0};
 
@@ -26,21 +26,21 @@ void Preparing_numeral_keys(int sock_fd, SSI admin){
 	
 	//printf("\n\n%s\n%s\n%s\n%s\n",place_G+1, place_P+1, place_A1+1, place_A2+1);
 
-	int KEY_G = atoi(place_G + 1);
-	int KEY_P = atoi(place_P + 1);
-	int A1 = atoi(place_A1 + 1);
-	int A2 = atoi(place_A2 + 1);
+	size_t KEY_G = atoi(place_G + 1);
+	size_t KEY_P = atoi(place_P + 1);
+	size_t A1 = atoi(place_A1 + 1);
+	size_t A2 = atoi(place_A2 + 1);
 
 	printf("Get:\nG = %d\nP = %d\n", KEY_G, KEY_P);
 	printf("Get:\nA1 = %d\nA2 = %d\n", A1, A2);
 
-	int B1 = Speed_degree_with_mod(KEY_G, b1, KEY_P);
-	int B2 = Speed_degree_with_mod(KEY_G, b2, KEY_P);
+	size_t B1 = Speed_degree_with_mod(KEY_G, b1, KEY_P);
+	size_t B2 = Speed_degree_with_mod(KEY_G, b2, KEY_P);
 
 	printf("Get:\nB1 = %d\nB2 = %d\n", B1, B2);
 
-	int K1 = Speed_degree_with_mod(KEY_G, A1, KEY_P);
-	int K2 = Speed_degree_with_mod(KEY_G, A2, KEY_P);
+	size_t K1 = Speed_degree_with_mod(KEY_G, A1, KEY_P);
+	size_t K2 = Speed_degree_with_mod(KEY_G, A2, KEY_P);
 
 	sprintf(answer, "@Secret info:%d:%d", B1, B2);
 
@@ -57,13 +57,13 @@ void Decoding(){
 
 }
 
-int Speed_degree_with_mod(int g, int x, int p){ // return = g^x % p
+size_t Speed_degree_with_mod(size_t g, size_t x, size_t p){ // return = g^x % p
 	if (x == 0)
 		return 1;
 
 	if (x % 2 != 0)
 		return (Speed_degree_with_mod(g, x - 1, p) * g) % p;
 
-	int y = Speed_degree_with_mod(g, x / 2, p);
+	size_t y = Speed_degree_with_mod(g, x / 2, p);
 	return (y * y) % p;
 }

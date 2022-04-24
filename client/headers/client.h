@@ -42,7 +42,7 @@ int Broadcast_find(SSI own_addr, SSI * ret_addr);
 void Preparing_numeral_keys(int sock_fd, SSI admin);
 void Encryption();
 void Decoding();
-int Speed_degree_with_mod(int g, int x, int p);
+size_t Speed_degree_with_mod(int g, int x, int p);
 
 
 #endif
