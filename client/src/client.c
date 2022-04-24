@@ -27,9 +27,10 @@ int Do_task(input enter){
 	if (strcmp("@exit",enter.cmd) == 0){
 		ret = 0;
 	}else if (strcmp("@connect",enter.cmd) == 0){
-		printf("Try to find connection...\n");
+		printf("\n\tTry to find connection...\n");
 
 		Connection_attempt();
+		
 
 		ret = 1;
 	}else{

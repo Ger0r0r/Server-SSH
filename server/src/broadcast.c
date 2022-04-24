@@ -23,6 +23,8 @@ void Broadcast_scanning(){
 	setsockopt(sock_fd_rcv, SOL_SOCKET, SO_BROADCAST, &a, sizeof(a));
 	bind(sock_fd_rcv, (struct sockaddr*) &serv_addr, sizeof(serv_addr));
 	
+	printf("START SCANNING BROADCAST\n");
+
 	while (1) {
 		socklen_t len = sizeof(cli_addr);
 		recvfrom(sock_fd_rcv, buf, sizeof(buf), MSG_WAITALL,

@@ -17,14 +17,14 @@ int main(int argc, char ** argv) {
 		return 0;
 	}
 
-	int sock_fd_own = socket(AF_INET, SOCK_STREAM, 0);
+	int sock_fd_own = socket(AF_INET, SOCK_DGRAM, 0);
 	if (sock_fd_own == -1) {
 		printf("socket creation failed...\n");
 		exit(0);
 	}
 
 	struct sockaddr_in own_addr = Get_addr();
-	Bind_addr(sock_fd_own, &own_addr);
+	Bind_addr(sock_fd_own, own_addr);
 
 	int code = 1;
 	input enter;

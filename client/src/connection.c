@@ -1,16 +1,20 @@
 #include "../headers/client.h"
 
-struct sockaddr_in Connection_attempt(){
+int Connection_attempt(){
 
-	struct sockaddr_in serv_addr = Broadcast_find();
+	int ret = Broadcast_find();
 
-	return serv_addr;
+	if (ret){
+		
+	}else{
+		printf("\tConnection failed\n");
+	}
+	return 0;
 }
 
 
-struct sockaddr_in Broadcast_find(){
+int Broadcast_find(){
 	char * buf = "@Give_info";
-	read(STDIN_FILENO, buf, MAX_COMMAND_LENGHT);
 	struct sockaddr_in serv_addr;
 	memset(&serv_addr, 0, sizeof(serv_addr));
 
@@ -21,18 +25,29 @@ struct sockaddr_in Broadcast_find(){
 	}
 
 	serv_addr.sin_family = AF_INET;
-	serv_addr.sin_port = htons(27312);
+	serv_addr.sin_port = htons(BROADCAST_PORT);
 	serv_addr.sin_addr.s_addr = htonl(INADDR_BROADCAST);
 
 	int a = 1;
 	setsockopt(sock_fd, SOL_SOCKET, SO_BROADCAST, &a, sizeof(a));
 	//bind(sock_fd, (struct sockaddr*) &serv_addr, sizeof (serv_addr));
 
-	sendto(sock_fd, buf, strlen(buf), MSG_CONFIRM, (const struct sockaddr *) &serv_addr, sizeof serv_addr);
+	int n;
 
-	// get
-	socklen_t len = sizeof(serv_addr);
-	recvfrom(sock_fd, buf, sizeof(buf), MSG_WAITALL, (struct sockaddr *) &serv_addr, &len);
-	printf("Get answer from server: ip = %s\nMessage : %s\n", inet_ntoa(serv_addr.sin_addr), buf);
-	return serv_addr;
+	for (size_t i = 0; i < COUNT_OF_ATTEMPT_FOR_CONNECTION; i++){
+		printf("\tAttempt %zu\n", i + 1);
+
+		sendto(sock_fd, buf, strlen(buf), MSG_CONFIRM, (const struct sockaddr *) &serv_addr, sizeof serv_addr);
+
+		// get
+		socklen_t len = sizeof(serv_addr);
+		n = recvfrom(sock_fd, buf, sizeof(buf), MSG_DONTWAIT, (struct sockaddr *) &serv_addr, &len);
+		
+		if (n){
+			printf("\tGet answer from server: ip = %s\n\tMessage : %s\n", inet_ntoa(serv_addr.sin_addr), buf);
+			return 1;
+		}
+		usleep(TIME_BETWEEN_ATTEMPTS_FOR_CONNECTION);
+	}
+	return 0;
 }
