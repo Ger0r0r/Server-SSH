@@ -29,6 +29,7 @@ int main(int argc, char ** argv) {
 	con_data.my.sin_port = htons(OWN_PORT);
 	con_data.my.sin_addr.s_addr = htonl(INADDR_ANY);
 	con_data.status = 0;
+	con_data.sock_fd = sock_fd_own;
 	
 	if ( bind(sock_fd_own, (struct sockaddr *)&con_data.my, sizeof(con_data.my)) < 0 ){
 		perror("bind failed");

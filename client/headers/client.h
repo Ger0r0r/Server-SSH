@@ -29,6 +29,7 @@ typedef struct {
 typedef struct{
 	SSI admin;
 	SSI my;
+	int sock_fd;
 	int status; // 1 - connected; 0 - disconnected
 }connection;
 

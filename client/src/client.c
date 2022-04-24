@@ -29,14 +29,14 @@ int Do_task(connection * data, input enter){
 	}else if (strcmp("@connect",enter.cmd) == 0){
 		if (data->status){
 			printf("\n\n\tConnection already exists\n\n");
+		}else{
+			printf("\n\tTry to find connection...\n\n");
+
+			data->status = Connection_attempt(data->my, &data->admin);
+
+			Preparing_numeral_keys(data->sock_fd, data->admin);
 		}
 		
-		printf("\n\tTry to find connection...\n\n");
-
-		data->status = Connection_attempt(data->my, &data->admin);
-
-		
-
 		ret = 1;
 	}else{
 		printf("Unknown command!\n");
