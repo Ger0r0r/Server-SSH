@@ -15,7 +15,6 @@ int Connection_attempt(SSI own_addr, SSI * adm_addr){
 	return 0;
 }
 
-
 int Broadcast_find(SSI own_addr, SSI * ret_addr){
 	char buf[MAX_COMMAND_LENGHT] = {0};
 
@@ -71,4 +70,75 @@ int Broadcast_find(SSI own_addr, SSI * ret_addr){
 		}
 	}
 	return 0;
+}
+
+void Generetion_keys(data){
+	char * hey = "@Hey admin!\n";
+	sendto(data->sock_fd, (const char *)hey, strlen(hey), MSG_CONFIRM, (const struct sockaddr *)&data->admin, sizeof(data->admin));
+
+	size_t K1, K2;
+	Preparing_numeral_keys(data->sock_fd, data->admin, &K1, &K2);
+	char Key_new[MAX_COMMAND_LENGHT] = {0};
+	char IV_new[MAX_COMMAND_LENGHT] = {0};
+	Make_keys(K1, K2, Key_new, IV_new);
+}
+
+int Check_for_old_keys(connection * data){
+	int secret_txt = open(".login.txt", O_CREAT, 0700);
+
+	char buf[MAX_COMMAND_LENGHT] = {0};
+
+	// in .login.txt "__LOGIN__#__PASSWORD__#__KEY__#__IV__"
+
+	int count = read(secret_txt, buf, MAX_COMMAND_LENGHT);
+	if (count < 0){
+		perror("Read secret.txt");
+	}else if (count > 32){
+		char * get_password = strchr(buf, '#');
+		char * get_key_old = strchr(get_password + 1, '#');
+		char * get_IV_old = strchr(get_key_old + 1, '#');
+
+		buf[get_password - buf] = '\0';
+		buf[get_key_old - buf] = '\0';
+		buf[get_IV_old - buf] = '\0';
+
+		strcat(data->info_user.login, buf);
+		strcat(data->info_user.password, get_password + 1);
+		strcat(data->info_user.key_old, get_key_old + 1);
+		strcat(data->info_user.IV_old, get_IV_old + 1);
+
+		printf("Read:\n%s\n%s\n%s\n%s\n", data->info_user.login, data->info_user.password, data->info_user.key_old, data->info_user.IV_old);
+		return 1;		
+
+	}else{
+		printf("Previos session keys does'n exists\n");
+		close(secret_txt);
+		return -1;		
+	}
+	return -1;
+}
+
+int Auto_login(connection * data){
+	char another_ses[MAX_COMMAND_LENGHT] = {0};
+	sprintf(another_ses, "@Have previos session:%s#%s#%s#%s\n", data->info_user.login, data->info_user.password, data->info_user.key_old, data->info_user.IV_old);
+	/**/sendto(data->sock_fd, (const char *)another_ses, strlen(another_ses), MSG_CONFIRM, (const struct sockaddr *)&data->admin, sizeof(data->admin));
+
+	int n;
+	unsigned int len;
+	char admin_message[MAX_COMMAND_LENGHT] = {0};
+	/**/n = recvfrom(data->sock_fd, (char *)admin_message, MAX_COMMAND_LENGHT, MSG_WAITALL, (struct sockaddr *)&data->admin, &len);
+	admin_message[n] = '\0';
+
+	if (strcmp(admin_message, "@Success")){
+		data->status = 2;
+		int secret_info = open(".login.txt", O_CREAT, O_TRUNC, 0700);
+
+		dprintf(secret_info, "%s:%s:%s\n", log_pas, data->info_user.key, data->info_user.IV);
+
+		close(secret_info);
+		return 1;
+	}else{
+		return 2;
+	}
+	return -1;
 }

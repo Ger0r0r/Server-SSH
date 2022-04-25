@@ -54,14 +54,6 @@ void Preparing_numeral_keys(int sock_fd, SSI admin, size_t * K1, size_t * K2){
 	//printf("KEYS:\n%zu\n%zu\n", *K1, *K2);	
 }
 
-void Encryption(){
-
-}
-
-void Decoding(){
-
-}
-
 size_t Speed_degree_with_mod(size_t g, size_t x, size_t p){ // return = g^x % p
 	if (x == 0)
 		return 1;
@@ -96,4 +88,12 @@ void Make_keys(size_t K1, size_t K2, char * key, char * IV){
 
 	printf("key: %s\n", key);
 	printf("IV: %s\n", IV);
+}
+
+void Encryption(){
+
+}
+
+void Decoding(){
+
 }
