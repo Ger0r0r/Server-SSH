@@ -54,9 +54,9 @@ int Command_exec(connection * data, input enter);
 
 int Connection_attempt(SSI own_addr, SSI * adm_addr);
 int Broadcast_find(SSI own_addr, SSI * ret_addr);
-void Generetion_keys(data);
+void Generetion_keys(connection * data);
 int Check_for_old_keys(connection * data);
-void Auto_login(connection * data);
+int Auto_login(connection * data);
 
 void Preparing_numeral_keys(int sock_fd, SSI admin, size_t * K1, size_t * K2);
 size_t Speed_degree_with_mod(size_t g, size_t x, size_t p);

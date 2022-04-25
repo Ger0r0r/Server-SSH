@@ -34,10 +34,10 @@ int Do_task(connection * data, input enter){
 		//return Command_connect(data);
 	}else if (strcmp("@copy_from",enter.cmd) == 0){
 		//return Command_connect(data);
-	}else if (enter.cmd[0] == '@')){
+	}else if (enter.cmd[0] == '@'){
 		printf("Unknown command!\n");
 	}else{
-		return Command_exec(data,);
+		return Command_exec(data,enter);
 		// Command to server (get "__COMMAND__", but send "@#__COMMAND__")
 	}
 	return -1;

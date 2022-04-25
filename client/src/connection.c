@@ -72,7 +72,7 @@ int Broadcast_find(SSI own_addr, SSI * ret_addr){
 	return 0;
 }
 
-void Generetion_keys(data){
+void Generetion_keys(connection * data){
 	char * hey = "@Hey admin!\n";
 	sendto(data->sock_fd, (const char *)hey, strlen(hey), MSG_CONFIRM, (const struct sockaddr *)&data->admin, sizeof(data->admin));
 
@@ -133,7 +133,7 @@ int Auto_login(connection * data){
 		data->status = 2;
 		int secret_info = open(".login.txt", O_CREAT, O_TRUNC, 0700);
 
-		dprintf(secret_info, "%s:%s:%s\n", log_pas, data->info_user.key, data->info_user.IV);
+		dprintf(secret_info, "%s#%s#%s#%s\n", data->info_user.login, data->info_user.password, data->info_user.key, data->info_user.IV);
 
 		close(secret_info);
 		return 1;
