@@ -37,7 +37,7 @@ int Do_task(connection * data, input enter){
 	}else if (enter.cmd[0] == '@')){
 		printf("Unknown command!\n");
 	}else{
-		return Command_exec(data, enter);
+		return Command_exec(data,);
 		// Command to server (get "__COMMAND__", but send "@#__COMMAND__")
 	}
 	return -1;
