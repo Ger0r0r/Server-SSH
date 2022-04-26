@@ -2,7 +2,7 @@
 
 SSI admin_addr, client_addr;
 
-void Administraitor_UDP(){
+void Administraitor_UDP(user ** database){
 	
 	int sock_fd_adm;
 	char buf[MAX_COMMAND_LENGHT];
@@ -35,33 +35,44 @@ void Administraitor_UDP(){
 		ret_code = bind(sock_fd_adm, (const struct sockaddr *)&admin_addr, sizeof(admin_addr));
 	}
 
+	// Give info to broadcast handler
 	size_t mine_info = Encrypt_signal(admin_addr);
-
 	union sigval cn_info;
 	memset(&cn_info, 0, sizeof(cn_info));
 	cn_info.sival_ptr = (void*)mine_info;
 	sigqueue(getppid(), SIGUSR1, cn_info);
 	
-	
+	// Waiting for connection
 	int n;
 	socklen_t len = sizeof(client_addr);
 	memset(buf, 0, sizeof(buf));
 	n = recvfrom(sock_fd_adm, (char *)buf, MAX_COMMAND_LENGHT, MSG_WAITALL, (struct sockaddr *)&client_addr, &len);
 	// Message: @Hey admin!
 
+	// Give signal for creating new admin to connection handler
 	kill(getppid(), SIGUSR2);
 
+	// Generate two secret keys
 	size_t K1, K2;
 	Preparing_numeral_keys(sock_fd_adm, client_addr, &K1, &K2);
 	char Key[MAX_COMMAND_LENGHT] = {0};
 	char IV[MAX_COMMAND_LENGHT] = {0};
 	Make_keys(K1, K2, Key, IV);
 
+	int code = 1;
+	char message[MAX_COMMAND_LENGHT] = {0};
+
+	while (code){
+		message = Get_message();
+
+
+	}
+
+
+
 	return;
-
-
 }
 
-void Administraitor_TCP(SSI client, int ccl){
+void Administraitor_TCP(user ** database){
 	return;
 }

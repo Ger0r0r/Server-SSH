@@ -3,6 +3,7 @@
 int signal_input;
 int current_admins = 0;
 int mode;
+user ** database;
 
 void Wait_connection(int mmm){
 
@@ -29,6 +30,8 @@ void Wait_connection(int mmm){
 
 	sigaction(SIGUSR1, &act_usr1, 0); // update admin addr
 	sigaction(SIGUSR2, &act_usr2, 0); // fork for new admin
+
+	database = Get_database();
 
 	kill(getpid(), SIGUSR2);
 
@@ -57,9 +60,9 @@ void New_admin_request(int sigN, siginfo_t* sigInfo, void* context){
 	if (pid == 0){
 		current_admins++;
 		if (mode == 1){ // TCP
-			Administraitor_TCP();
+			Administraitor_TCP(database);
 		}else if (mode == 0){ // UDP
-			Administraitor_UDP();
+			Administraitor_UDP(database);
 		}else{
 			// ERROR
 		}	

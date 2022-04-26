@@ -108,6 +108,7 @@ int Check_for_old_keys(connection * data){
 		strcat(data->info_user.IV_old, get_IV_old + 1);
 
 		printf("Read:\n%s\n%s\n%s\n%s\n", data->info_user.login, data->info_user.password, data->info_user.key_old, data->info_user.IV_old);
+		close(secret_txt);
 		return 1;		
 
 	}else{

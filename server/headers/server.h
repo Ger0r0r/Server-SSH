@@ -7,6 +7,9 @@
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <sys/ipc.h>
+#include <sys/sem.h>
+#include <sys/shm.h>
 #include <signal.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
@@ -24,11 +27,21 @@
 #define PUBLIC_KEY_P 20999999
 #define PUBLIC_KEY_G 7
 #define TIMEOUT_BEFORE_SEND_KEYS 1000000
+#define MAX_USER_COUNT 100
 
 typedef struct {
 	char cmd[MAX_COMMAND_LENGHT];
 	char arg[MAX_COMMAND_LENGHT];
 }input;
+
+typedef struct {
+	char * login;
+	char * password;
+	char * key;
+	char * IV;
+	char * key_old;
+	char * IV_old;
+}user;
 
 void Broadcast_scanning();
 void Start_connection(SSI new_cn);
@@ -43,6 +56,10 @@ SSI Translate_signal(size_t data);
 
 void Administraitor_TCP();
 void Administraitor_UDP();
+
+user ** Get_database();
+user * Get_user(char * data);
+char * Get_message();
 
 void Preparing_numeral_keys(int sock_fd, SSI client, size_t * K1, size_t * K2);
 void Encryption();

@@ -19,14 +19,14 @@ void Preparing_numeral_keys(int sock_fd, SSI admin, size_t * K1, size_t * K2){
 
 	char answer[MAX_COMMAND_LENGHT] = {0};
 
-	// Message form: @You are not alone!:__P_KEY_G__:__P_KEY_P__:__A1__:__A2__
+	// Message form: @You are not alone!:__P_KEY_G__#__P_KEY_P__#__A1__#__A2__
 	
 	//printf("Get message:\n%s\n", admin_message);
 
 	char * place_P = strchr(admin_message + 1, ':');
-	char * place_G = strchr(place_P + 1, ':');
-	char * place_A1 = strchr(place_G + 1, ':');
-	char * place_A2 = strchr(place_A1 + 1, ':');
+	char * place_G = strchr(place_P + 1, '#');
+	char * place_A1 = strchr(place_G + 1, '#');
+	char * place_A2 = strchr(place_A1 + 1, '#');
 	
 	//printf("\n\n%s\n%s\n%s\n%s\n",place_G+1, place_P+1, place_A1+1, place_A2+1);
 
