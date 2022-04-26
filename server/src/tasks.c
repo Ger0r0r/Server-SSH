@@ -1,25 +1,25 @@
 #include "../headers/server.h"
 
-void Disconnected(){
+int Disconnected(){
 
 }
 
-void Login(){
+int Login(){
 
 }
 
-void Check_previos_session(){
+int Check_previos_session(){
 
 }
 
-void Do_usual(){
+int Do_usual(){
 
 }
 
-void Copy_to(){
+int Copy_to(){
 
 }
 
-void Copy_from(){
-	
+int Copy_from(){
+
 }

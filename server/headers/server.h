@@ -69,12 +69,12 @@ user * Get_user(char * data);
 void Get_message(connection * bfd, char * message);
 int Get_code(char * message, char * content);
 
-void Disconnected();
-void Login();
-void Check_previos_session();
-void Do_usual();
-void Copy_to();
-void Copy_from();
+int Disconnected();
+int Login();
+int Check_previos_session();
+int Do_usual();
+int Copy_to();
+int Copy_from();
 
 
 void Preparing_numeral_keys(int sock_fd, SSI client, size_t * K1, size_t * K2);

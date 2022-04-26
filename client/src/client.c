@@ -37,7 +37,7 @@ int Do_task(connection * data, input enter){
 		return 1;
 	}else if (strcmp("@connect",enter.cmd) == 0){
 		if (data->status == 0){
-			retun Command_connect(data);
+			return Command_connect(data);
 		}else{
 			printf("You already connected\n");
 		}

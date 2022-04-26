@@ -62,27 +62,28 @@ int Parser(char * message, char * content){
 
 	char * space = strchr(message, ' ');
 	if (space == NULL){
-		if (strcmp(message, "@Disconnected" == 0)){
+		if (strcmp(message, "@Disconnected") == 0){
 			Disconnected();
 		}
 	}	
 	
 	space[0] = '\0';
 	char cmd[MAX_COMMAND_LENGHT] = {0};
-	cmd = strcpy(cmd, message);
+	strcpy(cmd, message);
 
 	if (strcmp(cmd, "@Log_in") == 0){
-		Login();
+		return Login();
 	}else if (strcmp(cmd, "@Have_previos_session") == 0){
-		Check_previos_session();
+		return Check_previos_session();
 	}else if (strcmp(cmd, "@#") == 0){
-		Do_usual();
+		return Do_usual();
 	}else if (strcmp(cmd, "@Copy_to") == 0){
-		Copy_to();
+		return Copy_to();
 	}else if (strcmp(cmd, "@Copy_from") == 0){
-		Copy_from();
+		return Copy_from();
 	}else{
 		// ERROR
+
 	}
-	
+	return -1; // ERROR
 }
