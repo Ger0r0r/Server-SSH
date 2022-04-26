@@ -121,7 +121,7 @@ int Check_for_old_keys(connection * data){
 
 int Auto_login(connection * data){
 	char another_ses[MAX_COMMAND_LENGHT] = {0};
-	sprintf(another_ses, "@Have previos session:%s#%s#%s#%s\n", data->info_user.login, data->info_user.password, data->info_user.key_old, data->info_user.IV_old);
+	sprintf(another_ses, "@Have_previos_session %s#%s#%s#%s\n", data->info_user.login, data->info_user.password, data->info_user.key_old, data->info_user.IV_old);
 	/**/sendto(data->sock_fd, (const char *)another_ses, strlen(another_ses), MSG_CONFIRM, (const struct sockaddr *)&data->admin, sizeof(data->admin));
 
 	int n;

@@ -2,24 +2,23 @@
 
 SSI admin_addr, client_addr;
 
-void Administraitor_UDP(user ** database){
-	
-	int sock_fd_adm;
+void Administraitor_UDP(connection * bfd){
+
 	char buf[MAX_COMMAND_LENGHT];
 	
 	// Creating socket file descriptor
-	if ( (sock_fd_adm = socket(AF_INET, SOCK_DGRAM, 0)) < 0 ) {
+	if ( (bfd->sock_fd = socket(AF_INET, SOCK_DGRAM, 0)) < 0 ) {
 		perror("socket creation failed");
 		exit(EXIT_FAILURE);
 	}
-	
-	memset(&admin_addr, 0, sizeof(admin_addr));
-	memset(&client_addr, 0, sizeof(client_addr));
+
+	memset(&bfd->admin, 0, sizeof(bfd->admin));
+	memset(&bfd->client, 0, sizeof(bfd->client));
 	
 	// Filling server information
-	admin_addr.sin_family = AF_INET; // IPv4
-	admin_addr.sin_addr.s_addr = INADDR_ANY;
-	admin_addr.sin_port = htons(BROADCAST_PORT);
+	bfd->admin.sin_family = AF_INET; // IPv4
+	bfd->admin.sin_addr.s_addr = INADDR_ANY;
+	bfd->admin.sin_port = htons(BROADCAST_PORT);
 	
 	// Bind the socket with the server address
 	int ret_code = -1;
@@ -28,15 +27,15 @@ void Administraitor_UDP(user ** database){
 	while (ret_code < 0){
 		addition_port++;
 
-		admin_addr.sin_family = AF_INET; // IPv4
-		admin_addr.sin_addr.s_addr = INADDR_ANY;
-		admin_addr.sin_port = htons(BROADCAST_PORT + addition_port);
+		bfd->admin.sin_family = AF_INET; // IPv4
+		bfd->admin.sin_addr.s_addr = INADDR_ANY;
+		bfd->admin.sin_port = htons(BROADCAST_PORT + addition_port);
 	
-		ret_code = bind(sock_fd_adm, (const struct sockaddr *)&admin_addr, sizeof(admin_addr));
+		ret_code = bind(bfd->sock_fd, (const struct sockaddr *)&bfd->admin, sizeof(bfd->admin));
 	}
 
 	// Give info to broadcast handler
-	size_t mine_info = Encrypt_signal(admin_addr);
+	size_t mine_info = Encrypt_signal(bfd->admin);
 	union sigval cn_info;
 	memset(&cn_info, 0, sizeof(cn_info));
 	cn_info.sival_ptr = (void*)mine_info;
@@ -44,9 +43,9 @@ void Administraitor_UDP(user ** database){
 	
 	// Waiting for connection
 	int n;
-	socklen_t len = sizeof(client_addr);
+	socklen_t len = sizeof(bfd->client);
 	memset(buf, 0, sizeof(buf));
-	n = recvfrom(sock_fd_adm, (char *)buf, MAX_COMMAND_LENGHT, MSG_WAITALL, (struct sockaddr *)&client_addr, &len);
+	n = recvfrom(bfd->sock_fd, (char *)buf, MAX_COMMAND_LENGHT, MSG_WAITALL, (struct sockaddr *)&bfd->client, &len);
 	// Message: @Hey admin!
 
 	// Give signal for creating new admin to connection handler
@@ -54,16 +53,18 @@ void Administraitor_UDP(user ** database){
 
 	// Generate two secret keys
 	size_t K1, K2;
-	Preparing_numeral_keys(sock_fd_adm, client_addr, &K1, &K2);
+	Preparing_numeral_keys(bfd->sock_fd, bfd->client, &K1, &K2);
 	char Key[MAX_COMMAND_LENGHT] = {0};
 	char IV[MAX_COMMAND_LENGHT] = {0};
 	Make_keys(K1, K2, Key, IV);
 
 	int code = 1;
-	char * message;
+	char message[MAX_COMMAND_LENGHT] = {0};
+	char content[MAX_COMMAND_LENGHT] = {0};
 
 	while (code){
-		message = Get_message();
+		Get_message(bfd, message);
+		code = Parser(message, connect);
 
 
 	}
@@ -73,6 +74,6 @@ void Administraitor_UDP(user ** database){
 	return;
 }
 
-void Administraitor_TCP(user ** database){
+void Administraitor_TCP(connection * bfd){
 	return;
 }

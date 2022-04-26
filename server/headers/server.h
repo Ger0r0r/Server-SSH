@@ -43,6 +43,13 @@ typedef struct {
 	char * IV_old;
 }user;
 
+typedef struct {
+	SSI client;
+	SSI admin;
+	int sock_fd;
+	user ** users;
+}connection;
+
 void Broadcast_scanning();
 void Start_connection(SSI new_cn);
 void Update_admin_info(int sigN, siginfo_t* sigInfo, void* context);
@@ -54,12 +61,21 @@ void New_admin_request(int sigN, siginfo_t* sigInfo, void* context);
 size_t Encrypt_signal(SSI data);
 SSI Translate_signal(size_t data);
 
-void Administraitor_TCP();
-void Administraitor_UDP();
+void Administraitor_TCP(connection * bfd);
+void Administraitor_UDP(connection * bfd);
 
 user ** Get_database();
 user * Get_user(char * data);
-char * Get_message();
+void Get_message(connection * bfd, char * message);
+int Get_code(char * message, char * content);
+
+void Disconnected();
+void Login();
+void Check_previos_session();
+void Do_usual();
+void Copy_to();
+void Copy_from();
+
 
 void Preparing_numeral_keys(int sock_fd, SSI client, size_t * K1, size_t * K2);
 void Encryption();

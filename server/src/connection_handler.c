@@ -3,7 +3,7 @@
 int signal_input;
 int current_admins = 0;
 int mode;
-user ** database;
+connection bfd; // Big Faking Database
 
 void Wait_connection(int mmm){
 
@@ -18,7 +18,6 @@ void Wait_connection(int mmm){
 	sigaddset(&set1, SIGUSR1);	
 	act_usr1.sa_mask = set1;
 
-
 	struct sigaction act_usr2;
 	memset(&act_usr2, 0 , sizeof(act_usr2));
 	act_usr2.sa_sigaction = New_admin_request;
@@ -31,7 +30,7 @@ void Wait_connection(int mmm){
 	sigaction(SIGUSR1, &act_usr1, 0); // update admin addr
 	sigaction(SIGUSR2, &act_usr2, 0); // fork for new admin
 
-	database = Get_database();
+	bfd.users = Get_database();
 
 	kill(getpid(), SIGUSR2);
 
@@ -60,9 +59,9 @@ void New_admin_request(int sigN, siginfo_t* sigInfo, void* context){
 	if (pid == 0){
 		current_admins++;
 		if (mode == 1){ // TCP
-			Administraitor_TCP(database);
+			Administraitor_TCP(&bfd);
 		}else if (mode == 0){ // UDP
-			Administraitor_UDP(database);
+			Administraitor_UDP(&bfd);
 		}else{
 			// ERROR
 		}	

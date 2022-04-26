@@ -27,13 +27,24 @@ int Do_task(connection * data, input enter){
 	if (strcmp("@exit",enter.cmd) == 0){
 		return Command_exit(data);
 	}else if (strcmp("@login",enter.cmd) == 0){
-		return Command_login(data, enter.arg);
+		if (data->status == 1){
+			return Command_login(data, enter.arg);
+		}else if (data->status == 2){
+			printf("You already login\n");
+		}else{
+			printf("No connection (use @connect)\n");
+		}
+		return 1;
 	}else if (strcmp("@connect",enter.cmd) == 0){
-		return Command_connect(data);
+		if (data->status == 0){
+			retun Command_connect(data);
+		}else{
+			printf("You already connected\n");
+		}
 	}else if (strcmp("@copy_to",enter.cmd) == 0){
-		//return Command_connect(data);
+		// Copy file to server
 	}else if (strcmp("@copy_from",enter.cmd) == 0){
-		//return Command_connect(data);
+		// Copy file from server
 	}else if (enter.cmd[0] == '@'){
 		printf("Unknown command!\n");
 	}else{

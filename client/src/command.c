@@ -22,11 +22,11 @@ int Command_exit(connection * data){
 
 int Command_login(connection * data, char * log_pas){
 
-	// char * lof_pas = "__LOGIN__:__PASSWORD__"
+	// char * lof_pas = "__LOGIN__#__PASSWORD__"
 
 	char message[MAX_COMMAND_LENGHT] = {0};
 
-	sprintf(message, "@Log in:%s", log_pas);
+	sprintf(message, "@Log_in %s", log_pas);
 
 	/**/sendto(data->sock_fd, (const char *)message, strlen(message), MSG_CONFIRM, (const struct sockaddr *)&data->admin, sizeof(&data->admin));
 
