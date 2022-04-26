@@ -60,7 +60,7 @@ void Administraitor_UDP(user ** database){
 	Make_keys(K1, K2, Key, IV);
 
 	int code = 1;
-	char message[MAX_COMMAND_LENGHT] = {0};
+	char * message;
 
 	while (code){
 		message = Get_message();

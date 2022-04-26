@@ -2,7 +2,7 @@
 
 user ** Get_database (){
 
-	user ** database = calloc(MAX_USER_COUNT, sizeof(*user));
+	user ** database = calloc(MAX_USER_COUNT, sizeof(user *));
 
 	int data = open(".data.txt", O_CREAT, 0700);
 	// Many string like "__LOGIN__#__PASSWORD__#__OLD_KEY__#__OLD_IV__"
@@ -10,7 +10,7 @@ user ** Get_database (){
 	char temp[MAX_COMMAND_LENGHT * MAX_USER_COUNT] = {0};
 	read(data, temp, MAX_COMMAND_LENGHT * MAX_USER_COUNT);
 
-	char * check = &temp; // Just noNULL pointer
+	char * check = (char *)&temp; // Just noNULL pointer
 	int count = 0;
 
 	while (check != NULL){
@@ -39,9 +39,10 @@ user * Get_user(char * data){
 	temp = strchr(pers.key_old, '#');
 	temp[0] = '\0';
 	pers.IV_old = temp + 1;
-	return &pers;
+	user * ptr = &pers;
+	return ptr;
 }
 
 char * Get_message() {
-
+	return NULL;
 }
