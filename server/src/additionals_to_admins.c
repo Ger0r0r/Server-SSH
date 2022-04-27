@@ -16,19 +16,16 @@ connection Get_database (){
 	int count = 0;
 
 	while (1){
-		//printf("Step %d\n", count);
 		database[count] = Get_user(check);
-		//printf("Return from Get_user\n");
-		count++;
 		check = end + 1;
 		end = strchr(check + 1, '\n');
-		if (end != NULL){
-			//printf("___WARNING___\n");
-			break;
+		if (end == NULL){
+			break;			
 		}
-		end[0] = '\0';
+		end[0] = '\0';	
+		count++;
 	}
-	//printf("Done make database!\n");
+	printf("Done make database!\n");
 
 	connection ret = {};
 
