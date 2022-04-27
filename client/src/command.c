@@ -63,7 +63,7 @@ int Command_connect(connection * data){
 			Generetion_keys(data);
 
 			int res_check = Check_for_old_keys(data);
-			if (res_check < 0){
+			if (res_check > 0){
 				return Auto_login(data);
 			}else{
 				return data->status;
