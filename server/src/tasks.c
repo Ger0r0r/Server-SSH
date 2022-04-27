@@ -14,6 +14,8 @@ int Login(connection * bfd, char * log_pas){
 	border[0] = '\0';
 	strcpy(username, log_pas);
 	strcpy(password, border + 1);
+	
+	printf("___WARNING___\n");
 
 	for (size_t i = 0; i < bfd->c_users; i++){
 		if ((strcmp(bfd->users[i]->login, username) == 0) && (strcmp(bfd->users[i]->password, password) == 0)){
