@@ -15,7 +15,7 @@ connection Get_database (){
 	end[0] = '\0';
 	int count = 0;
 
-	while (check != NULL){
+	while (end != NULL){
 		printf("Step %d\n", count);
 		database[count] = Get_user(check);
 		count++;
