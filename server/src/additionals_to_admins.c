@@ -54,6 +54,7 @@ void Get_message(connection * bfd, char * message) {
 	socklen_t len = sizeof(bfd->client);
 	memset(buf, 0, sizeof(buf));
 	n = recvfrom(bfd->sock_fd, (char *)buf, MAX_COMMAND_LENGHT, MSG_WAITALL, (struct sockaddr *)&bfd->client, &len);
+	printf("Recieve message:\n%s\n", message);
 	return;
 }
 
