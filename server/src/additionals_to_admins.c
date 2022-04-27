@@ -79,14 +79,19 @@ int Parser(char * message, char * content, connection * bfd){
 	strcpy(args, space + 1);
 
 	if (strcmp(cmd, "@Login") == 0){
+		printf("Get command: @Login\n");
 		return Login(bfd, args);
 	}else if (strcmp(cmd, "@Have_previos_session") == 0){
+		printf("Get command: @Have_previos_session\n");
 		return Check_previos_session(bfd, args);
 	}else if (strcmp(cmd, "@#") == 0){
+		printf("Get command: @#\n");
 		return Do_usual(bfd, args);
 	}else if (strcmp(cmd, "@Copy_to") == 0){
+		printf("Get command: @Copy_to\n");
 		return Copy_to();
 	}else if (strcmp(cmd, "@Copy_from") == 0){
+		printf("Get command: @Copy_from\n");
 		return Copy_from();
 	}else{
 		// ERROR
