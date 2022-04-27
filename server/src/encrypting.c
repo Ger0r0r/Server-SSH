@@ -4,6 +4,8 @@ void Preparing_numeral_keys(int sock_fd, SSI client, size_t * K1, size_t * K2){
 
 	srand(time(0));
 
+	printf("GO SECURE\n");
+
 	size_t a1 = rand() % 0b11111111111111111111111111111111;
 	size_t a2 = rand() % 0b11111111111111111111111111111111;
 
