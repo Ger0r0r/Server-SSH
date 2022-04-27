@@ -1,6 +1,6 @@
 #include "../headers/server.h"
 
-connection * Get_database (){
+void Get_database (connection * bfd){
 
 	user ** database = calloc(MAX_USER_COUNT, sizeof(user *));
 
@@ -27,14 +27,15 @@ connection * Get_database (){
 	}
 	printf("Done make database!\n");
 
-	connection ret = {};
+	connection * ret = calloc(1, sizeof(connection));
 
-	ret.c_users = count;
-	ret.users = database;	
+	ret->c_users = count;
+	ret->users = database;	
 
+	bfd = ret;
 
 	close(data);
-	return &ret;
+	return;
 }
 
 user * Get_user(char * data){

@@ -67,7 +67,7 @@ SSI Translate_signal(size_t data);
 void Administraitor_TCP(connection * bfd);
 void Administraitor_UDP(connection * bfd);
 
-connection * Get_database();
+void Get_database(connection * bfd);
 user * Get_user(char * data);
 void Get_message(connection * bfd, char * message);
 int Parser(char * message, char * content, connection * bfd);
