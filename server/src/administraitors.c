@@ -64,6 +64,9 @@ void Administraitor_UDP(connection * bfd){
 	char message[MAX_COMMAND_LENGHT] = {0};
 	char content[MAX_COMMAND_LENGHT] = {0};
 
+	printf("Info about connection:\n");
+	printf("Client - %s:%d", inet_pton(bfd->client.sin_addr), htons(bfd->client.sin_port));
+
 	while (code){
 		Get_message(bfd, message);
 		code = Parser(message, content, bfd);
