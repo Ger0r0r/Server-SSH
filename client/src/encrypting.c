@@ -52,6 +52,10 @@ void Preparing_numeral_keys(int sock_fd, SSI admin, size_t * K1, size_t * K2){
 
 	sendto(sock_fd, (const char *)answer, strlen(answer), MSG_CONFIRM, (const struct sockaddr *)&admin, sizeof(admin));
 
+	printf("CHECK FUUCK\n");
+	printf("Descriptor - %d\n", sock_fd);
+	printf("Admin - %s:%d\n", inet_ntoa(admin.sin_addr), htons(admin.sin_port));
+
 	//printf("KEYS:\n%zu\n%zu\n", *K1, *K2);	
 }
 

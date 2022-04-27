@@ -28,28 +28,19 @@ int Command_login(connection * data, char * log_pas){
 
 	sprintf(message, "@Login %s", log_pas);
 
-	printf("Info about connection:\n");
-	printf("Client - %s:%d\n", inet_ntoa(data->my.sin_addr), htons(data->my.sin_port));
-	printf("Admin - %s:%d\n", inet_ntoa(data->admin.sin_addr), htons(data->admin.sin_port));
-	printf("Keys - %s %s", data->info_user.key, data->info_user.IV);
+	/**/sendto(data->sock_fd, (const char *)message, strlen(message), MSG_CONFIRM, (const struct sockaddr *)&(data->admin), sizeof((data->admin)));
 
-	/**/sendto(data->sock_fd, (const char *)message, strlen(message), MSG_CONFIRM, (const struct sockaddr *)&data->admin, sizeof(&data->admin));
-
-	
 	int n;
 	unsigned int len;
 	char admin_message[MAX_COMMAND_LENGHT] = {0};
-	printf("___WARNING___\n");
 	/**/n = recvfrom(data->sock_fd, (char *)admin_message, MAX_COMMAND_LENGHT, MSG_WAITALL, (struct sockaddr *)&data->admin, &len);
 	admin_message[n] = '\0';
-
-	printf("___WARNING___\n");
 
 	if (strcmp(admin_message, "@Success")){
 		data->status = 2;
 		int secret_info = open(".login.txt", O_CREAT, O_TRUNC, 0700);
 
-		dprintf(secret_info, "%s:%s:%s\n", log_pas, data->info_user.key, data->info_user.IV);
+		dprintf(secret_info, "%s#%s#%s\n", log_pas, data->info_user.key, data->info_user.IV);
 
 		close(secret_info);
 		return 1;

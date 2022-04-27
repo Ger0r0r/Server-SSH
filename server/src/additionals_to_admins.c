@@ -33,13 +33,13 @@ connection * Get_database (){
 	ret->users = database;	
 
 	
-	printf("Info about connection:\n");
-	printf("Client - %s:%d\n", inet_ntoa(ret->client.sin_addr), htons(ret->client.sin_port));
-	printf("Keys - %s %s\n", ret->key, ret->iv);
-	printf("Database\n");
-	for (size_t i = 0; i < ret->c_users; i++){
-		printf("%s %s %s %s\n", ret->users[i]->login, ret->users[i]->password, ret->users[i]->key_old, ret->users[i]->IV_old);
-	}printf("\n");
+	//printf("Info about connection:\n");
+	//printf("Client - %s:%d\n", inet_ntoa(ret->client.sin_addr), htons(ret->client.sin_port));
+	//printf("Keys - %s %s\n", ret->key, ret->iv);
+	//printf("Database\n");
+	//for (size_t i = 0; i < ret->c_users; i++){
+	//	printf("%s %s %s %s\n", ret->users[i]->login, ret->users[i]->password, ret->users[i]->key_old, ret->users[i]->IV_old);
+	//}printf("\n");
 
 	close(data);
 	return ret;
@@ -73,24 +73,23 @@ void Get_message(connection * bfd, char * message) {
 	int n;
 	socklen_t len = sizeof(bfd->client);
 	memset(buf, 0, sizeof(buf));
-	
-	printf("Info about connection:\n");
-	printf("Client - %s:%d\n", inet_ntoa(bfd->client.sin_addr), htons(bfd->client.sin_port));
-	printf("Keys - %s %s\n", bfd->key, bfd->iv);
-	printf("Database\n");
-	for (size_t i = 0; i < bfd->c_users; i++){
-		printf("%s %s %s %s\n", bfd->users[i]->login, bfd->users[i]->password, bfd->users[i]->key_old, bfd->users[i]->IV_old);
-	}printf("\n");
 
-	printf("I AM READY!!!\n");
-	n = recvfrom(bfd->sock_fd, (char *)buf, sizeof(buf), MSG_WAITALL, (struct sockaddr *)&bfd->client, &len);
-	printf("Recieve message:\n%s\n", message);
+	//printf("Info about connection:\n");
+	//printf("Discriptor - %d\n", bfd->sock_fd);
+	//printf("Client - %s:%d\n", inet_ntoa(bfd->client.sin_addr), htons(bfd->client.sin_port));
+	//printf("Keys - %s %s\n", bfd->key, bfd->iv);
+	//printf("Database\n");
+	//for (size_t i = 0; i < bfd->c_users; i++){
+	//	printf("%s %s %s %s\n", bfd->users[i]->login, bfd->users[i]->password, bfd->users[i]->key_old, bfd->users[i]->IV_old);
+	//}printf("\n");
+
+	n = recvfrom(bfd->sock_fd, (char *)buf, MAX_COMMAND_LENGHT, MSG_WAITALL, (struct sockaddr *)&bfd->client, &len);
 	return;
 }
 
 int Parser(char * message, char * content, connection * bfd){
 	// 0 - @Disconnected
-	// 1 - @Log_in __LOGIN__#__PASSWORD__
+	// 1 - @Login __LOGIN__#__PASSWORD__
 	// 2 - @Have_previos_session :__LOGIN__#__PASSWORD__#__OLD_KEY__#__OLD_IV__
 	// 3 - @# {exec}
 	// 4 - @Copy_to
