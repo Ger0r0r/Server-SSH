@@ -29,6 +29,8 @@ connection Get_database (){
 	ret.c_users = count;
 	ret.users = database;	
 
+	printf("Done make database!\n");
+
 	close(data);
 	return ret;
 }
