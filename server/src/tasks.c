@@ -16,8 +16,8 @@ int Login(connection * bfd, char * log_pas){
 	strcpy(password, border + 1);
 
 	for (size_t i = 0; i < bfd->c_users; i++){
-		if (strcmp((bfd->users[i]->login, username) == 0) && (strcmp(bfd->users[i]->password, password) == 0)){
-			char message = "@Success";
+		if ((strcmp(bfd->users[i]->login, username) == 0) && (strcmp(bfd->users[i]->password, password) == 0)){
+			char message[MAX_COMMAND_LENGHT] = "@Success";
 			/**/sendto(bfd->sock_fd, message, strlen(message), MSG_CONFIRM, (const struct sockaddr *)&bfd->client, sizeof(bfd->client));
 			bfd->users[i]->IV = bfd->iv;
 			bfd->users[i]->key = bfd->key;
@@ -25,7 +25,7 @@ int Login(connection * bfd, char * log_pas){
 		}
 	}
 	printf("Wrong login or password!\n");
-	char message = "@Wrong username or password!";
+	char message[MAX_COMMAND_LENGHT] = "@Wrong username or password!";
 	/**/sendto(bfd->sock_fd, message, strlen(message), MSG_CONFIRM, (const struct sockaddr *)&bfd->client, sizeof(bfd->client));
 	return 1;	
 }
@@ -47,21 +47,21 @@ int Check_previos_session(connection * bfd, char * data){
 	strcpy(old_iv, border_between+1);
 
 	for (size_t i = 0; i < bfd->c_users; i++){
-		if (strcmp((bfd->users[i]->key_old, old_key) == 0) && (strcmp(bfd->users[i]->IV_old, old_iv) == 0)){
-			char message = "@Success";
+		if ((strcmp(bfd->users[i]->key_old, old_key) == 0) && (strcmp(bfd->users[i]->IV_old, old_iv) == 0)){
+			char message[MAX_COMMAND_LENGHT] = "@Success";
 			/**/sendto(bfd->sock_fd, message, strlen(message), MSG_CONFIRM, (const struct sockaddr *)&bfd->client, sizeof(bfd->client));
 			bfd->users[i]->IV = bfd->iv;
 			bfd->users[i]->key = bfd->key;
 			return 1;
 		}
 	}
-	char message = "@Wrong";
+	char message[MAX_COMMAND_LENGHT] = "@Wrong";
 	/**/sendto(bfd->sock_fd, message, strlen(message), MSG_CONFIRM, (const struct sockaddr *)&bfd->client, sizeof(bfd->client));
 	return 1;	
 }
 
 int Do_usual(connection * bfd, char * command){
-	
+
 }
 
 int Copy_to(){
