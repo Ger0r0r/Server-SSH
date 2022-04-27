@@ -26,7 +26,7 @@ int Command_login(connection * data, char * log_pas){
 
 	char message[MAX_COMMAND_LENGHT] = {0};
 
-	sprintf(message, "@Log_in %s", log_pas);
+	sprintf(message, "@Login %s", log_pas);
 
 	/**/sendto(data->sock_fd, (const char *)message, strlen(message), MSG_CONFIRM, (const struct sockaddr *)&data->admin, sizeof(&data->admin));
 
