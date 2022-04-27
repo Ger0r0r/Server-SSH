@@ -78,7 +78,7 @@ int Parser(char * message, char * content, connection * bfd){
 	strcpy(cmd, message);
 	strcpy(args, space + 1);
 
-	if (strcmp(cmd, "@Log_in") == 0){
+	if (strcmp(cmd, "@Login") == 0){
 		return Login(bfd, args);
 	}else if (strcmp(cmd, "@Have_previos_session") == 0){
 		return Check_previos_session(bfd, args);
