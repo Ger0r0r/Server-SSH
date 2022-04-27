@@ -3,7 +3,7 @@
 int signal_input;
 int current_admins = 0;
 int mode;
-connection bfd; // Big Faking Database
+connection * bfd; // Big Faking Database
 
 void Wait_connection(int mmm){
 
@@ -55,11 +55,11 @@ void New_admin_request(int sigN, siginfo_t* sigInfo, void* context){
 		return;
 
 	printf("Info about connection:\n");
-	printf("Client - %s:%d\n", inet_ntoa(bfd.client.sin_addr), htons(bfd.client.sin_port));
-	printf("Keys - %s %s\n", bfd.key, bfd.iv);
+	printf("Client - %s:%d\n", inet_ntoa(bfd->client.sin_addr), htons(bfd->client.sin_port));
+	printf("Keys - %s %s\n", bfd->key, bfd->iv);
 	printf("Database\n");
-	for (size_t i = 0; i < bfd.c_users; i++){
-		printf("%s %s %s %s\n", bfd.users[i]->login, bfd.users[i]->password, bfd.users[i]->key_old, bfd.users[i]->IV_old);
+	for (size_t i = 0; i < bfd->c_users; i++){
+		printf("%s %s %s %s\n", bfd->users[i]->login, bfd->users[i]->password, bfd->users[i]->key_old, bfd->users[i]->IV_old);
 	}printf("\n");
 	
 	int pid = fork();
@@ -67,9 +67,9 @@ void New_admin_request(int sigN, siginfo_t* sigInfo, void* context){
 	if (pid == 0){
 		current_admins++;
 		if (mode == 1){ // TCP
-			Administraitor_TCP(&bfd);
+			Administraitor_TCP(bfd);
 		}else if (mode == 0){ // UDP
-			Administraitor_UDP(&bfd);
+			Administraitor_UDP(bfd);
 		}else{
 			// ERROR
 		}	
