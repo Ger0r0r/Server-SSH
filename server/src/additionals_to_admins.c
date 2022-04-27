@@ -68,11 +68,22 @@ user * Get_user(char * data){
 }
 
 void Get_message(connection * bfd, char * message) {
+
 	char buf[MAX_COMMAND_LENGHT];
 	int n;
 	socklen_t len = sizeof(bfd->client);
 	memset(buf, 0, sizeof(buf));
-	n = recvfrom(bfd->sock_fd, (char *)buf, MAX_COMMAND_LENGHT, MSG_WAITALL, (struct sockaddr *)&bfd->client, &len);
+	
+	printf("Info about connection:\n");
+	printf("Client - %s:%d\n", inet_ntoa(bfd->client.sin_addr), htons(bfd->client.sin_port));
+	printf("Keys - %s %s\n", bfd->key, bfd->iv);
+	printf("Database\n");
+	for (size_t i = 0; i < bfd->c_users; i++){
+		printf("%s %s %s %s\n", bfd->users[i]->login, bfd->users[i]->password, bfd->users[i]->key_old, bfd->users[i]->IV_old);
+	}printf("\n");
+
+	printf("I AM READY!!!\n");
+	n = recvfrom(bfd->sock_fd, (char *)buf, sizeof(buf), MSG_WAITALL, (struct sockaddr *)&bfd->client, &len);
 	printf("Recieve message:\n%s\n", message);
 	return;
 }
@@ -114,7 +125,7 @@ int Parser(char * message, char * content, connection * bfd){
 		printf("Get command: @Copy_from\n");
 		return Copy_from();
 	}else{
-		// ERROR
+		printf("Unknown_command");
 	}
 	return -1; // ERROR
 }
