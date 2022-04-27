@@ -16,7 +16,7 @@ connection Get_database (){
 	while (check != NULL){
 		database[count] = Get_user(check);
 		count++;
-		check = strchr(check, '\n');
+		check = strchr(check + 1, '\n');
 	}
 
 	connection ret = {};

@@ -19,7 +19,7 @@ void Preparing_numeral_keys(int sock_fd, SSI client, size_t * K1, size_t * K2){
 	char client_message[MAX_COMMAND_LENGHT] = {0};
 	char greetings[MAX_COMMAND_LENGHT] = {0};
 
-	sprintf(greetings, "@You are not alone!:%d:%d:%zu:%zu\n", PUBLIC_KEY_P, PUBLIC_KEY_G, A1, A2);
+	sprintf(greetings, "@You are not alone!:%d#%d#%zu#%zu\n", PUBLIC_KEY_P, PUBLIC_KEY_G, A1, A2);
 
 
 	usleep(TIMEOUT_BEFORE_SEND_KEYS);

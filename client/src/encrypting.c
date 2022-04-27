@@ -21,7 +21,7 @@ void Preparing_numeral_keys(int sock_fd, SSI admin, size_t * K1, size_t * K2){
 
 	// Message form: @You are not alone!:__P_KEY_G__#__P_KEY_P__#__A1__#__A2__
 	
-	//printf("Get message:\n%s\n", admin_message);
+	printf("Get message:\n%s\n", admin_message);
 
 	char * place_P = strchr(admin_message + 1, ':');
 	char * place_G = strchr(place_P + 1, '#');
@@ -30,6 +30,7 @@ void Preparing_numeral_keys(int sock_fd, SSI admin, size_t * K1, size_t * K2){
 	
 	//printf("\n\n%s\n%s\n%s\n%s\n",place_G+1, place_P+1, place_A1+1, place_A2+1);
 
+	printf("Wow,.. timeout...\n");
 	size_t KEY_G = atoi(place_G + 1);
 	size_t KEY_P = atoi(place_P + 1);
 	size_t A1 = atoi(place_A1 + 1);
