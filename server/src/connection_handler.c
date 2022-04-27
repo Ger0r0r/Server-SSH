@@ -53,6 +53,14 @@ void Send_admin_info(int sigN, siginfo_t* sigInfo, void* context){
 void New_admin_request(int sigN, siginfo_t* sigInfo, void* context){
 	if (sigN != SIGUSR2)
 		return;
+
+	printf("Info about connection:\n");
+	printf("Client - %s:%d\n", inet_ntoa(bfd->client.sin_addr), htons(bfd->client.sin_port));
+	printf("Keys - %s %s\n", bfd->key, bfd->iv);
+	printf("Database\n");
+	for (size_t i = 0; i < bfd->c_users; i++){
+		printf("%s %s %s %s\n", bfd->users[i]->login, bfd->users[i]->password, bfd->users[i]->key_old, bfd->users[i]->IV_old);
+	}printf("\n");
 	
 	int pid = fork();
 
