@@ -85,4 +85,5 @@ int Command_exec(connection * data, input enter){
 	admin_message[n] = '\0';
 
 	printf("\n%s\n", admin_message);
+	return 1;
 }

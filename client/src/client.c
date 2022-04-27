@@ -48,7 +48,15 @@ int Do_task(connection * data, input enter){
 	}else if (enter.cmd[0] == '@'){
 		printf("Unknown command!\n");
 	}else{
-		return Command_exec(data,enter);
+		if (data->status == 2){
+			return Command_exec(data,enter);
+		}else if (data->status == 1){
+			printf("You must be login (use @login __LOGIN__#__PASSWORD__)\n");			
+		}else{
+			printf("No connection (use @connect)\n");
+		}
+		
+		
 		// Command to server (get "__COMMAND__", but send "@#__COMMAND__")
 	}
 	return -1;
