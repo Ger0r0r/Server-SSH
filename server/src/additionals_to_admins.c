@@ -17,13 +17,13 @@ connection * Get_database (){
 
 	while (1){
 		database[count] = Get_user(check);
+		count++;
 		check = end + 1;
 		end = strchr(check + 1, '\n');
 		if (end == NULL){
 			break;			
 		}
 		end[0] = '\0';	
-		count++;
 	}
 	printf("Done make database!\n");
 
