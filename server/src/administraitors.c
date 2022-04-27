@@ -57,6 +57,8 @@ void Administraitor_UDP(connection * bfd){
 	char Key[MAX_COMMAND_LENGHT] = {0};
 	char IV[MAX_COMMAND_LENGHT] = {0};
 	Make_keys(K1, K2, Key, IV);
+	bfd->key = Key;
+	bfd->iv = IV;
 
 	int code = 1;
 	char message[MAX_COMMAND_LENGHT] = {0};
@@ -64,14 +66,11 @@ void Administraitor_UDP(connection * bfd){
 
 	while (code){
 		Get_message(bfd, message);
-		code = Parser(message, connect);
+		code = Parser(message, content, bfd);
 
 
 	}
-
-
-
-	return;
+	exit(EXIT_SUCCESS);
 }
 
 void Administraitor_TCP(connection * bfd){

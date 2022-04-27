@@ -30,7 +30,7 @@ void Wait_connection(int mmm){
 	sigaction(SIGUSR1, &act_usr1, 0); // update admin addr
 	sigaction(SIGUSR2, &act_usr2, 0); // fork for new admin
 
-	bfd.users = Get_database();
+	bfd = Get_database();
 
 	kill(getpid(), SIGUSR2);
 

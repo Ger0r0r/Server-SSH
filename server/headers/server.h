@@ -47,7 +47,10 @@ typedef struct {
 	SSI client;
 	SSI admin;
 	int sock_fd;
+	int c_users;
 	user ** users;
+	char * key;
+	char * iv;
 }connection;
 
 void Broadcast_scanning();
@@ -64,15 +67,15 @@ SSI Translate_signal(size_t data);
 void Administraitor_TCP(connection * bfd);
 void Administraitor_UDP(connection * bfd);
 
-user ** Get_database();
+connection Get_database();
 user * Get_user(char * data);
 void Get_message(connection * bfd, char * message);
-int Get_code(char * message, char * content);
+int Parser(char * message, char * content, connection * bfd);
 
 int Disconnected();
-int Login();
-int Check_previos_session();
-int Do_usual();
+int Login(connection * bfd, char * log_pas);
+int Check_previos_session(connection * bfd, char * data);
+int Do_usual(connection * bfd, char * command);
 int Copy_to();
 int Copy_from();
 

@@ -1,6 +1,6 @@
 #include "../headers/server.h"
 
-user ** Get_database (){
+connection Get_database (){
 
 	user ** database = calloc(MAX_USER_COUNT, sizeof(user *));
 
@@ -19,8 +19,13 @@ user ** Get_database (){
 		check = strchr(check, '\n');
 	}
 
+	connection ret = {};
+
+	ret.c_users = count;
+	ret.users = database;	
+
 	close(data);
-	return database;
+	return ret;
 }
 
 user * Get_user(char * data){
@@ -52,7 +57,7 @@ void Get_message(connection * bfd, char * message) {
 	return;
 }
 
-int Parser(char * message, char * content){
+int Parser(char * message, char * content, connection * bfd){
 	// 0 - @Disconnected
 	// 1 - @Log_in __LOGIN__#__PASSWORD__
 	// 2 - @Have_previos_session :__LOGIN__#__PASSWORD__#__OLD_KEY__#__OLD_IV__
@@ -63,27 +68,28 @@ int Parser(char * message, char * content){
 	char * space = strchr(message, ' ');
 	if (space == NULL){
 		if (strcmp(message, "@Disconnected") == 0){
-			Disconnected();
+			return Disconnected();
 		}
 	}	
 	
 	space[0] = '\0';
 	char cmd[MAX_COMMAND_LENGHT] = {0};
+	char args[MAX_COMMAND_LENGHT] = {0};
 	strcpy(cmd, message);
+	strcpy(args, space + 1);
 
 	if (strcmp(cmd, "@Log_in") == 0){
-		return Login();
+		return Login(bfd, args);
 	}else if (strcmp(cmd, "@Have_previos_session") == 0){
-		return Check_previos_session();
+		return Check_previos_session(bfd, args);
 	}else if (strcmp(cmd, "@#") == 0){
-		return Do_usual();
+		return Do_usual(bfd, args);
 	}else if (strcmp(cmd, "@Copy_to") == 0){
 		return Copy_to();
 	}else if (strcmp(cmd, "@Copy_from") == 0){
 		return Copy_from();
 	}else{
 		// ERROR
-
 	}
 	return -1; // ERROR
 }
