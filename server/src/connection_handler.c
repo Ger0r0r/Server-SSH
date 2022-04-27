@@ -30,7 +30,16 @@ void Wait_connection(int mmm){
 	sigaction(SIGUSR1, &act_usr1, 0); // update admin addr
 	sigaction(SIGUSR2, &act_usr2, 0); // fork for new admin
 
-	Get_database(bfd);
+	bfd = Get_database();
+
+	printf("Info about connection:\n");
+	printf("Client - %s:%d\n", inet_ntoa(bfd->client.sin_addr), htons(bfd->client.sin_port));
+	printf("Keys - %s %s\n", bfd->key, bfd->iv);
+	printf("Database\n");
+	for (size_t i = 0; i < bfd->c_users; i++){
+		printf("%s %s %s %s\n", bfd->users[i]->login, bfd->users[i]->password, bfd->users[i]->key_old, bfd->users[i]->IV_old);
+	}printf("\n");
+	
 
 	kill(getpid(), SIGUSR2);
 

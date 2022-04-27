@@ -1,6 +1,6 @@
 #include "../headers/server.h"
 
-void Get_database (connection * bfd){
+connection * Get_database (){
 
 	user ** database = calloc(MAX_USER_COUNT, sizeof(user *));
 
@@ -32,31 +32,38 @@ void Get_database (connection * bfd){
 	ret->c_users = count;
 	ret->users = database;	
 
-	bfd = ret;
+	
+	printf("Info about connection:\n");
+	printf("Client - %s:%d\n", inet_ntoa(ret->client.sin_addr), htons(ret->client.sin_port));
+	printf("Keys - %s %s\n", ret->key, ret->iv);
+	printf("Database\n");
+	for (size_t i = 0; i < ret->c_users; i++){
+		printf("%s %s %s %s\n", ret->users[i]->login, ret->users[i]->password, ret->users[i]->key_old, ret->users[i]->IV_old);
+	}printf("\n");
 
 	close(data);
-	return;
+	return ret;
 }
 
 user * Get_user(char * data){
 	printf("Get string\n%s\n", data);
 	// String like "__LOGIN__#__PASSWORD__#__OLD_KEY__#__OLD_IV__"
-	user pers = {};
+	user * pers = calloc(1, sizeof(user));
 
 	char * temp;
-	pers.login = data;
+	pers->login = data;
 
 	temp = strchr(data, '#');	
 	temp[0] = '\0';
-	pers.password = temp + 1;
-	temp = strchr(pers.password, '#');
+	pers->password = temp + 1;
+	temp = strchr(pers->password, '#');
 	temp[0] = '\0';
-	pers.key_old = temp + 1;
-	temp = strchr(pers.key_old, '#');
+	pers->key_old = temp + 1;
+	temp = strchr(pers->key_old, '#');
 	temp[0] = '\0';
-	pers.IV_old = temp + 1;
-	user * ptr = &pers;
-	printf("%s>%s>%s>%s\n", pers.login, pers.password, pers.key_old, pers.IV_old);
+	pers->IV_old = temp + 1;
+	user * ptr = pers;
+	printf("%s>%s>%s>%s\n", pers->login, pers->password, pers->key_old, pers->IV_old);
 	return ptr;
 }
 
