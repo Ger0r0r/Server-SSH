@@ -11,12 +11,17 @@ connection Get_database (){
 	read(data, temp, MAX_COMMAND_LENGHT * MAX_USER_COUNT);
 
 	char * check = (char *)&temp; // Just noNULL pointer
+	char * end = strchr(check + 1, '\n');
+	end[0] = '\0';
 	int count = 0;
 
 	while (check != NULL){
+		printf("Step %d\n", count);
 		database[count] = Get_user(check);
 		count++;
-		check = strchr(check + 1, '\n');
+		check = end + 1;
+		end = strchr(check + 1, '\n');
+		end[0] = '\0';
 	}
 
 	connection ret = {};
@@ -29,6 +34,7 @@ connection Get_database (){
 }
 
 user * Get_user(char * data){
+	printf("Get string\n%s\n", data);
 	// String like "__LOGIN__#__PASSWORD__#__OLD_KEY__#__OLD_IV__"
 	user pers = {};
 
@@ -45,6 +51,7 @@ user * Get_user(char * data){
 	temp[0] = '\0';
 	pers.IV_old = temp + 1;
 	user * ptr = &pers;
+	printf("%s>%s>%s>%s\n", pers.login, pers.password, pers.key_old, pers.IV_old);
 	return ptr;
 }
 
