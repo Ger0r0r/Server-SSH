@@ -52,6 +52,8 @@ int Command_exit(connection * data);
 int Command_login(connection * data, char * log_pas);
 int Command_connect(connection * data);
 int Command_exec(connection * data, input enter);
+int Command_copy_to(connection * data, char * message);
+int Command_copy_from(connection * data, char * message);
 
 int Connection_attempt(SSI own_addr, SSI * adm_addr);
 int Broadcast_find(SSI own_addr, SSI * ret_addr);

@@ -81,7 +81,6 @@ int Check_previos_session(connection * bfd, char * data){
 
 int Do_usual(connection * bfd, char * command){
 
-	int code = fork();
 	int stat;
 	int file_pipes[2];
 	if	(pipe(file_pipes) == -1){
@@ -116,10 +115,14 @@ int Do_usual(connection * bfd, char * command){
 
 	char * output = calloc(MAX_OUTPUT_LENGHT, sizeof(char));
 	int read_c;
+	int code = fork();
 	if (!code){
 		close(file_pipes[0]);
-		dup2(STDOUT_FILENO, file_pipes[1]);
+		dup2(file_pipes[1], STDOUT_FILENO);
+		dup2(file_pipes[1], STDERR_FILENO);
 		execvp(argv[0],  argv);
+		printf("AHAHAH HUESOS\n");
+		return -9;
 	}else{
 		close(file_pipes[1]);
 		wait(&stat);
@@ -134,10 +137,34 @@ int Do_usual(connection * bfd, char * command){
 	return 1;
 }
 
-int Copy_to(){
+int Copy_to(connection * bfd, char * message){
+	// __TARGET_PATH__
+	// __SIZE__
+	// __TEXT__
 
+	
+
+	int fd_file = open(message, O_CREAT | O_TRUNC | O_RDWR, 0777);
+
+	char size_str[MAX_COMMAND_LENGHT] = {0};
+
+	socklen_t len = sizeof(bfd->client);
+	recvfrom(bfd->sock_fd, size_str, MAX_COMMAND_LENGHT, MSG_WAITALL, (struct sockaddr *)&bfd->client, &len);
+	int size = atoi(size_str);
+
+	char * text = calloc(size, sizeof(char));
+	recvfrom(bfd->sock_fd, text, size, MSG_WAITALL, (struct sockaddr *)&bfd->client, &len);
+
+	write(fd_file, text, size);
+
+	char answer[MAX_COMMAND_LENGHT] = "@Success";
+	/**/sendto(bfd->sock_fd, answer, strlen(answer), MSG_CONFIRM, (const struct sockaddr *)&bfd->client, sizeof(bfd->client));
+
+	close(fd_file);
+
+	return 1;
 }
 
-int Copy_from(){
+int Copy_from(connection * bfd, char * message){
 
 }

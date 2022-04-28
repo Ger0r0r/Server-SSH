@@ -79,8 +79,8 @@ int Disconnected(connection * bfd);
 int Login(connection * bfd, char * log_pas);
 int Check_previos_session(connection * bfd, char * data);
 int Do_usual(connection * bfd, char * command);
-int Copy_to();
-int Copy_from();
+int Copy_to(connection * bfd, char * message);
+int Copy_from(connection * bfd, char * message);
 void close_all_pipes(int (*massive)[2], int size);
 
 int getFileSize(int fd);

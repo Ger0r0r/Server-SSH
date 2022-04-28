@@ -127,10 +127,10 @@ int Parser(char * message, char * content, connection * bfd){
 		return Do_usual(bfd, args);
 	}else if (strcmp(cmd, "@Copy_to") == 0){
 		printf("Get command: @Copy_to\n");
-		return Copy_to();
+		return Copy_to(bfd, args);
 	}else if (strcmp(cmd, "@Copy_from") == 0){
 		printf("Get command: @Copy_from\n");
-		return Copy_from();
+		return Copy_from(bfd, args);
 	}else{
 		printf("Unknown_command");
 	}

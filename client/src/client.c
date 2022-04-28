@@ -42,9 +42,21 @@ int Do_task(connection * data, input enter){
 			printf("\n\tYou already connected\n");
 		}
 	}else if (strcmp("@copy_to",enter.cmd) == 0){
-		// Copy file to server
+		if (data->status == 2){
+			return Command_copy_to(data, enter.arg);
+		}else if (data->status == 1){
+			printf("\n\tYou must be login (use @login __LOGIN__#__PASSWORD__)\n");			
+		}else{
+			printf("\n\tNo connection (use @connect)\n");
+		}
 	}else if (strcmp("@copy_from",enter.cmd) == 0){
-		// Copy file from server
+		if (data->status == 2){
+			return Command_copy_from(data, enter.arg);
+		}else if (data->status == 1){
+			printf("\n\tYou must be login (use @login __LOGIN__#__PASSWORD__)\n");			
+		}else{
+			printf("\n\tNo connection (use @connect)\n");
+		}
 	}else if (enter.cmd[0] == '@'){
 		printf("\n\tUnknown command!\n");
 	}else{
