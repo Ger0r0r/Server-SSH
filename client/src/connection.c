@@ -78,13 +78,16 @@ void Generetion_keys(connection * data){
 
 	size_t K1, K2;
 	Preparing_numeral_keys(data->sock_fd, data->admin, &K1, &K2);
-	char Key_new[MAX_COMMAND_LENGHT] = {0};
-	char IV_new[MAX_COMMAND_LENGHT] = {0};
+	char * Key_new = calloc(MAX_COMMAND_LENGHT, sizeof(char));
+	char * IV_new = calloc(MAX_COMMAND_LENGHT, sizeof(char));
 	Make_keys(K1, K2, Key_new, IV_new);
+	data->info_user.key = Key_new;
+	data->info_user.IV = IV_new;
+	printf("In data\n%s %s\n", data->info_user.key, data->info_user.IV);
 }
 
 int Check_for_old_keys(connection * data){
-	int secret_txt = open(".login.txt", O_CREAT, 0700);
+	int secret_txt = open(".login.txt", O_CREAT | O_RDWR, 0700);
 
 	char buf[MAX_COMMAND_LENGHT] = {0};
 
@@ -102,12 +105,24 @@ int Check_for_old_keys(connection * data){
 		buf[get_key_old - buf] = '\0';
 		buf[get_IV_old - buf] = '\0';
 
-		strcat(data->info_user.login, buf);
-		strcat(data->info_user.password, get_password + 1);
-		strcat(data->info_user.key_old, get_key_old + 1);
-		strcat(data->info_user.IV_old, get_IV_old + 1);
+		char * login = calloc(MAX_COMMAND_LENGHT, sizeof(char));
+		char * password = calloc(MAX_COMMAND_LENGHT, sizeof(char));
+		char * key_old = calloc(MAX_COMMAND_LENGHT, sizeof(char));
+		char * iv_old = calloc(MAX_COMMAND_LENGHT, sizeof(char));
 
-		printf("Read:\n%s\n%s\n%s\n%s\n", data->info_user.login, data->info_user.password, data->info_user.key_old, data->info_user.IV_old);
+		strcpy(login, buf);
+		strcpy(password, get_password + 1);
+		strcpy(key_old, get_key_old + 1);
+		strcpy(iv_old, get_IV_old + 1);
+
+		printf("HOLY SHIT!!!\n");
+
+		data->info_user.login = login;
+		data->info_user.password = password;
+		data->info_user.key_old = key_old;
+		data->info_user.IV_old = iv_old;
+
+		printf("Read:\nlogin %s\npassword %s\nold key %s\nold IV %s\n", data->info_user.login, data->info_user.password, data->info_user.key_old, data->info_user.IV_old);
 		close(secret_txt);
 		return 1;		
 
@@ -130,7 +145,7 @@ int Auto_login(connection * data){
 	/**/n = recvfrom(data->sock_fd, (char *)admin_message, MAX_COMMAND_LENGHT, MSG_WAITALL, (struct sockaddr *)&data->admin, &len);
 	admin_message[n] = '\0';
 
-	if (strcmp(admin_message, "@Success")){
+	if (strcmp(admin_message, "@Success") == 0){
 		data->status = 2;
 		int secret_info = open(".login.txt", O_CREAT, O_TRUNC, 0700);
 

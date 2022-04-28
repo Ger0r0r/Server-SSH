@@ -10,6 +10,7 @@
 #include <sys/ipc.h>
 #include <sys/sem.h>
 #include <sys/shm.h>
+#include <sys/wait.h>
 #include <signal.h>
 #include <netinet/in.h>
 #include <arpa/inet.h>
@@ -23,11 +24,13 @@
 #define SSI struct sockaddr_in
 
 #define MAX_COMMAND_LENGHT 1024
+#define MAX_OUTPUT_LENGHT 65536
 #define BROADCAST_PORT 23456
 #define PUBLIC_KEY_P 20999999
 #define PUBLIC_KEY_G 7
 #define TIMEOUT_BEFORE_SEND_KEYS 1000000
 #define MAX_USER_COUNT 100
+#define BUFFD 666
 
 typedef struct {
 	char cmd[MAX_COMMAND_LENGHT];
@@ -72,13 +75,26 @@ user * Get_user(char * data);
 void Get_message(connection * bfd, char * message);
 int Parser(char * message, char * content, connection * bfd);
 
-int Disconnected();
+int Disconnected(connection * bfd);
 int Login(connection * bfd, char * log_pas);
 int Check_previos_session(connection * bfd, char * data);
 int Do_usual(connection * bfd, char * command);
 int Copy_to();
 int Copy_from();
+void close_all_pipes(int (*massive)[2], int size);
 
+int getFileSize(int fd);
+char* file2arr(int fd, int* arrLen);
+int numWords(char* arr,int lenArr);
+int getWordLen(char* arr, int position, int arrLen);
+int nextWord(char* arr, int position, int arrLen);
+char** arr2matrix(char* arr,int lenArr, int* pSize); // Также добавляет Null перед каждой |
+void printMatrix(char** matrix, int size);
+int numOfBarArr(char *arr, int len); //возвращает количество |
+int numOfBarMatrix(char** matrix, int size);
+int lastBarArr(char *arr, int len); //Находит последний | в массиве
+int lastBarMatrix(char ** matrix, int size);
+void freeMatrix(char** matrix, int realSize);
 
 void Preparing_numeral_keys(int sock_fd, SSI client, size_t * K1, size_t * K2);
 void Encryption();

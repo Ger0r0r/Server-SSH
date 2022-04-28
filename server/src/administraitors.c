@@ -76,6 +76,7 @@ void Administraitor_UDP(connection * bfd){
 	while (code){
 		//printf("Wait message\n");
 		Get_message(bfd, message);
+		printf("Well well,.. I have\n%s\n", message);
 		code = Parser(message, content, bfd);
 	}
 	exit(EXIT_SUCCESS);

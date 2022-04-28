@@ -30,6 +30,8 @@ void Wait_connection(int mmm){
 	sigaction(SIGUSR1, &act_usr1, 0); // update admin addr
 	sigaction(SIGUSR2, &act_usr2, 0); // fork for new admin
 
+	printf("GOVNP\n");
+
 	bfd = Get_database();
 
 	printf("Info about connection:\n");

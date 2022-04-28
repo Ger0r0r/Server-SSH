@@ -4,16 +4,20 @@ connection * Get_database (){
 
 	user ** database = calloc(MAX_USER_COUNT, sizeof(user *));
 
-	int data = open(".data.txt", O_CREAT, 0700);
+	int data = open(".data.txt", O_CREAT | O_RDWR, 0700);
+	perror("OPEN DATA");
 	// Many string like "__LOGIN__#__PASSWORD__#__OLD_KEY__#__OLD_IV__"
 
 	char temp[MAX_COMMAND_LENGHT * MAX_USER_COUNT] = {0};
 	read(data, temp, MAX_COMMAND_LENGHT * MAX_USER_COUNT);
+	perror("READ DATA");
 
 	char * check = (char *)&temp; // Just noNULL pointer
 	char * end = strchr(check + 1, '\n');
 	end[0] = '\0';
 	int count = 0;
+
+	printf("Terrible while...\n");	
 
 	while (1){
 		database[count] = Get_user(check);
@@ -32,7 +36,6 @@ connection * Get_database (){
 	ret->c_users = count;
 	ret->users = database;	
 
-	
 	//printf("Info about connection:\n");
 	//printf("Client - %s:%d\n", inet_ntoa(ret->client.sin_addr), htons(ret->client.sin_port));
 	//printf("Keys - %s %s\n", ret->key, ret->iv);
@@ -69,10 +72,9 @@ user * Get_user(char * data){
 
 void Get_message(connection * bfd, char * message) {
 
-	char buf[MAX_COMMAND_LENGHT];
+	memset(message, '\0', MAX_COMMAND_LENGHT);
 	int n;
 	socklen_t len = sizeof(bfd->client);
-	memset(buf, 0, sizeof(buf));
 
 	//printf("Info about connection:\n");
 	//printf("Discriptor - %d\n", bfd->sock_fd);
@@ -83,7 +85,11 @@ void Get_message(connection * bfd, char * message) {
 	//	printf("%s %s %s %s\n", bfd->users[i]->login, bfd->users[i]->password, bfd->users[i]->key_old, bfd->users[i]->IV_old);
 	//}printf("\n");
 
-	n = recvfrom(bfd->sock_fd, (char *)buf, MAX_COMMAND_LENGHT, MSG_WAITALL, (struct sockaddr *)&bfd->client, &len);
+	printf("Wait for a command...\n");
+	n = recvfrom(bfd->sock_fd, (char *)message, MAX_COMMAND_LENGHT, MSG_WAITALL, (struct sockaddr *)&bfd->client, &len);
+	perror("RECVFROM USER COMMAND");
+	printf("Wow, lets go!\n");
+	printf("I recived command\n%s\n", message);
 	return;
 }
 
@@ -95,10 +101,12 @@ int Parser(char * message, char * content, connection * bfd){
 	// 4 - @Copy_to
 	// 5 - @Copy_from
 
+	printf("Allright, lets check this stuff...\n%s\n", message);
+
 	char * space = strchr(message, ' ');
 	if (space == NULL){
 		if (strcmp(message, "@Disconnected") == 0){
-			return Disconnected();
+			return Disconnected(bfd);
 		}
 	}	
 	

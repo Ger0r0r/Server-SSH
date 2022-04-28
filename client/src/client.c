@@ -30,30 +30,30 @@ int Do_task(connection * data, input enter){
 		if (data->status == 1){
 			return Command_login(data, enter.arg);
 		}else if (data->status == 2){
-			printf("You already login\n");
+			printf("\n\tYou already login\n");
 		}else{
-			printf("No connection (use @connect)\n");
+			printf("\n\tNo connection (use @connect)\n");
 		}
 		return 1;
 	}else if (strcmp("@connect",enter.cmd) == 0){
 		if (data->status == 0){
 			return Command_connect(data);
 		}else{
-			printf("You already connected\n");
+			printf("\n\tYou already connected\n");
 		}
 	}else if (strcmp("@copy_to",enter.cmd) == 0){
 		// Copy file to server
 	}else if (strcmp("@copy_from",enter.cmd) == 0){
 		// Copy file from server
 	}else if (enter.cmd[0] == '@'){
-		printf("Unknown command!\n");
+		printf("\n\tUnknown command!\n");
 	}else{
 		if (data->status == 2){
 			return Command_exec(data,enter);
 		}else if (data->status == 1){
-			printf("You must be login (use @login __LOGIN__#__PASSWORD__)\n");			
+			printf("\n\tYou must be login (use @login __LOGIN__#__PASSWORD__)\n");			
 		}else{
-			printf("No connection (use @connect)\n");
+			printf("\n\tNo connection (use @connect)\n");
 		}
 		
 		

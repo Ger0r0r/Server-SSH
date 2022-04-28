@@ -17,6 +17,7 @@
 #define SSI struct sockaddr_in
 
 #define MAX_COMMAND_LENGHT 1024
+#define MAX_OUTPUT_LENGHT 65536
 #define OWN_PORT 25575
 #define BROADCAST_PORT 23456
 #define COUNT_OF_ATTEMPT_FOR_CONNECTION 5
