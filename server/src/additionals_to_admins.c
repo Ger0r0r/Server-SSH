@@ -2,18 +2,16 @@
 
 connection * Get_database (){
 
-	user ** database = calloc(MAX_USER_COUNT, sizeof(user *));
+	user ** database = calloc(MAX_USER_COUNT, sizeof(user *));		log_perror("calloc in Get_database");
 
-	int data = open(".data.txt", O_CREAT | O_RDWR, 0700);
-	log_perror("open .data.txt in Get_database");
+	int data = open(".data.txt", O_CREAT | O_RDWR, 0700);		log_perror("open .data.txt in Get_database");
 	// Many string like "__LOGIN__#__PASSWORD__#__OLD_KEY__#__OLD_IV__"
 
 	char temp[MAX_COMMAND_LENGHT * MAX_USER_COUNT] = {0};
-	read(data, temp, MAX_COMMAND_LENGHT * MAX_USER_COUNT);
-	log_perror("read .data.txt in Get_database");
+	read(data, temp, MAX_COMMAND_LENGHT * MAX_USER_COUNT);		log_perror("read .data.txt in Get_database");
 
 	char * check = (char *)&temp; // Just noNULL pointer
-	char * end = strchr(check + 1, '\n');
+	char * end = strchr(check + 1, '\n');		log_perror("strchr in Get_database");
 	end[0] = '\0';
 	int count = 0;
 
@@ -22,7 +20,7 @@ connection * Get_database (){
 		database[count] = Get_user(check);
 		count++;
 		check = end + 1;
-		end = strchr(check + 1, '\n');
+		end = strchr(check + 1, '\n');		log_perror("strchr in Ger_database");
 		if (end == NULL){
 			break;			
 		}
@@ -34,35 +32,35 @@ connection * Get_database (){
 	ret->c_users = count;
 	ret->users = database;	
 
-	close(data);
+	close(data);		log_perror("close in Get_database");
 	return ret;
 }
 
 user * Get_user(char * data){
-	printf("Get string\n%s\n", data);
+	//printf("Get string\n%s\n", data);
 	// String like "__LOGIN__#__PASSWORD__#__OLD_KEY__#__OLD_IV__"
-	user * pers = calloc(1, sizeof(user));
+	user * pers = calloc(1, sizeof(user));		log_perror("calloc in Get_user");
 
 	char * temp;
 	pers->login = data;
 
-	temp = strchr(data, '#');	
+	temp = strchr(data, '#');		log_perror("strchr 1 in Get_user");
 	temp[0] = '\0';
 	pers->password = temp + 1;
-	temp = strchr(pers->password, '#');
+	temp = strchr(pers->password, '#');		log_perror("strchr 2 in Get_user");
 	temp[0] = '\0';
 	pers->key_old = temp + 1;
-	temp = strchr(pers->key_old, '#');
+	temp = strchr(pers->key_old, '#');		log_perror("strchr 2 in Get_user");
 	temp[0] = '\0';
 	pers->IV_old = temp + 1;
 	user * ptr = pers;
-	printf("%s>%s>%s>%s\n", pers->login, pers->password, pers->key_old, pers->IV_old);
+	//printf("%s>%s>%s>%s\n", pers->login, pers->password, pers->key_old, pers->IV_old);
 	return ptr;
 }
 
 void Get_message(connection * bfd, char * message) {
 
-	memset(message, '\0', MAX_COMMAND_LENGHT);
+	memset(message, '\0', MAX_COMMAND_LENGHT);		log_perror("memset in Get_message");
 	int n;
 	socklen_t len = sizeof(bfd->client);
 
@@ -75,11 +73,10 @@ void Get_message(connection * bfd, char * message) {
 	//	printf("%s %s %s %s\n", bfd->users[i]->login, bfd->users[i]->password, bfd->users[i]->key_old, bfd->users[i]->IV_old);
 	//}printf("\n");
 
-	printf("Wait for a command...\n");
-	n = recvfrom(bfd->sock_fd, (char *)message, MAX_COMMAND_LENGHT, MSG_WAITALL, (struct sockaddr *)&bfd->client, &len);
-	log_perror("recvfrom in Get_message");
-	printf("Wow, lets go!\n");
-	printf("I recived command\n%s\n", message);
+	//printf("Wait for a command...\n");
+	n = recvfrom(bfd->sock_fd, (char *)message, MAX_COMMAND_LENGHT, MSG_WAITALL, (struct sockaddr *)&bfd->client, &len);		log_perror("recvfrom in Get_message");
+	//printf("Wow, lets go!\n");
+	//printf("I recived command\n%s\n", message);
 	return;
 }
 
@@ -93,18 +90,18 @@ int Parser(char * message, char * content, connection * bfd){
 
 	//printf("Allright, lets check this stuff...\n%s\n", message);
 
-	char * space = strchr(message, ' ');
+	char * space = strchr(message, ' ');		log_perror("strchr");
 	if (space == NULL){
 		if (strcmp(message, "@Disconnected") == 0){
 			return Disconnected(bfd);
 		}
-	}	
+	}
 	
 	space[0] = '\0';
 	char cmd[MAX_COMMAND_LENGHT] = {0};
 	char args[MAX_COMMAND_LENGHT] = {0};
-	strcpy(cmd, message);
-	strcpy(args, space + 1);
+	strcpy(cmd, message);		log_perror("strcpy 1 in Parser");
+	strcpy(args, space + 1);		log_perror("strcpy 2 in Parser");
 
 	if (strcmp(cmd, "@Login") == 0){
 		log_info("Get command: @Login");
@@ -124,5 +121,6 @@ int Parser(char * message, char * content, connection * bfd){
 	}else{
 		log_error("Get unknown command");
 	}
+	log_perror("strcmp in Parser");
 	return -1; // ERROR
 }
