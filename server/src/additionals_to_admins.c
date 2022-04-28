@@ -5,19 +5,18 @@ connection * Get_database (){
 	user ** database = calloc(MAX_USER_COUNT, sizeof(user *));
 
 	int data = open(".data.txt", O_CREAT | O_RDWR, 0700);
-	perror("OPEN DATA");
+	log_perror("open .data.txt in Get_database");
 	// Many string like "__LOGIN__#__PASSWORD__#__OLD_KEY__#__OLD_IV__"
 
 	char temp[MAX_COMMAND_LENGHT * MAX_USER_COUNT] = {0};
 	read(data, temp, MAX_COMMAND_LENGHT * MAX_USER_COUNT);
-	perror("READ DATA");
+	log_perror("read .data.txt in Get_database");
 
 	char * check = (char *)&temp; // Just noNULL pointer
 	char * end = strchr(check + 1, '\n');
 	end[0] = '\0';
 	int count = 0;
 
-	printf("Terrible while...\n");	
 
 	while (1){
 		database[count] = Get_user(check);
@@ -29,20 +28,11 @@ connection * Get_database (){
 		}
 		end[0] = '\0';	
 	}
-	printf("Done make database!\n");
 
 	connection * ret = calloc(1, sizeof(connection));
 
 	ret->c_users = count;
 	ret->users = database;	
-
-	//printf("Info about connection:\n");
-	//printf("Client - %s:%d\n", inet_ntoa(ret->client.sin_addr), htons(ret->client.sin_port));
-	//printf("Keys - %s %s\n", ret->key, ret->iv);
-	//printf("Database\n");
-	//for (size_t i = 0; i < ret->c_users; i++){
-	//	printf("%s %s %s %s\n", ret->users[i]->login, ret->users[i]->password, ret->users[i]->key_old, ret->users[i]->IV_old);
-	//}printf("\n");
 
 	close(data);
 	return ret;
@@ -87,7 +77,7 @@ void Get_message(connection * bfd, char * message) {
 
 	printf("Wait for a command...\n");
 	n = recvfrom(bfd->sock_fd, (char *)message, MAX_COMMAND_LENGHT, MSG_WAITALL, (struct sockaddr *)&bfd->client, &len);
-	perror("RECVFROM USER COMMAND");
+	log_perror("recvfrom in Get_message");
 	printf("Wow, lets go!\n");
 	printf("I recived command\n%s\n", message);
 	return;
@@ -101,7 +91,7 @@ int Parser(char * message, char * content, connection * bfd){
 	// 4 - @Copy_to
 	// 5 - @Copy_from
 
-	printf("Allright, lets check this stuff...\n%s\n", message);
+	//printf("Allright, lets check this stuff...\n%s\n", message);
 
 	char * space = strchr(message, ' ');
 	if (space == NULL){
@@ -117,22 +107,22 @@ int Parser(char * message, char * content, connection * bfd){
 	strcpy(args, space + 1);
 
 	if (strcmp(cmd, "@Login") == 0){
-		printf("Get command: @Login\n");
+		log_info("Get command: @Login");
 		return Login(bfd, args);
 	}else if (strcmp(cmd, "@Have_previos_session") == 0){
-		printf("Get command: @Have_previos_session\n");
+		log_info("Get command: @Have_previos_session\n");
 		return Check_previos_session(bfd, args);
 	}else if (strcmp(cmd, "@#") == 0){
-		printf("Get command: @#\n");
+		log_info("Get command: @#");
 		return Do_usual(bfd, args);
 	}else if (strcmp(cmd, "@Copy_to") == 0){
-		printf("Get command: @Copy_to\n");
+		log_info("Get command: @Copy_to");
 		return Copy_to(bfd, args);
 	}else if (strcmp(cmd, "@Copy_from") == 0){
-		printf("Get command: @Copy_from\n");
+		log_info("Get command: @Copy_from");
 		return Copy_from(bfd, args);
 	}else{
-		printf("Unknown_command");
+		log_error("Get unknown command");
 	}
 	return -1; // ERROR
 }

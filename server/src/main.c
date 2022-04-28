@@ -1,6 +1,5 @@
 #include "../headers/server.h"
 
-
 int main(int argc, char ** argv) {
 
 	int mode = -1; // 0 - UDP; 1 - TCP; -1 - ERROR

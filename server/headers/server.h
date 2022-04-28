@@ -4,6 +4,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdarg.h>
 #include <sys/socket.h>
 #include <sys/types.h>
 #include <sys/stat.h>
@@ -16,10 +17,20 @@
 #include <arpa/inet.h>
 #include <unistd.h>
 #include <fcntl.h>
+#include <errno.h>
 #include <openssl/conf.h>
 #include <openssl/evp.h>
 #include <openssl/err.h>
 #include <time.h>
+
+static int log_fd = -1;
+#define LOG_SIZE (1 << 14)
+static char buf_log[LOG_SIZE];
+
+#define log(fmt, ...) print_log("%s:%d \n" fmt, __FILE__, __LINE__, ##__VA_ARGS__)
+#define log_info(fmt, ...) log("[INFO] " fmt, ##__VA_ARGS__)
+#define log_error(fmt, ...) log("[ERROR] " fmt, ##__VA_ARGS__)
+#define log_perror(fmt, ...) log (fmt " (errno = %d): %s ", errno, strerror(errno), ##__VA_ARGS__)
 
 #define SSI struct sockaddr_in
 
@@ -55,6 +66,11 @@ typedef struct {
 	char * key;
 	char * iv;
 }connection;
+
+int print_time();
+int init_log(char* path);
+void print_log(char* str, ...);
+void printf_fd(int fd, char* str, ...);
 
 void Broadcast_scanning();
 void Start_connection(SSI new_cn);
