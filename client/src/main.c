@@ -3,19 +3,43 @@
 int mode;
 
 int main(int argc, char ** argv) {
+	// ./_PROG_NAME_ -t TCP/UDP _USER_@_IP_
+	// ./_PROG_NAME_ -broadcast
+
 
 	if (argc != 2){
-		printf("Start program with mode: %s -udp/-tcp\n", argv[0]);
+		printf("Start program with task:\n%s -t (connect)\n%s -broadcast (find servers)\n", argv[0], argv[0]);
 		return 0;
 	}
-	if (strcmp("-udp", argv[1]) == 0){
-		mode = 0;
-	}else if (strcmp("-tcp", argv[1]) == 0){
-		mode = 1;
-	}else{
-		printf("Enter correct mode: -udp/-tcp (you input: %s)\n", argv[1]);
-		return 0;
+
+    struct sockaddr_in server;
+    int socket_ss = 0;
+	
+	char NEED_BIND = 1;
+	char NOT_NEED_BIND = 2;
+
+	if (strcmp("-broadcast", argv[1]) == 0){
+		printf("CHECK\n");
+		socket_ss = Socket_config(&server, BROADCAST_PORT, SOCK_DGRAM, SO_BROADCAST, NOT_NEED_BIND, htonl(INADDR_BROADCAST));
+        if (Broadcast_search(socket_ss, &server) == 0)
+            return 0;
+	}else if (strcmp("-t", argv[1])){
+		if (strcmp("TCP", argv[2]) == 0){
+			mode = 0;
+		}else if (strcmp("UDP", argv[2]) == 0){
+			mode = 1;
+		}else{
+			printf("Enter correct mode: TCP or UDP\ncorrect input: %s -t <TCP/UDP> <USER>@<IP>\nyou input: %s -t %s\n", argv[0], argv[0], argv[2]);
+			return 0;
+		}
+
+		// connect
+
 	}
+	return 0;
+
+
+
 
 	int sock_fd_own = socket(AF_INET, SOCK_DGRAM, 0);
 	if (sock_fd_own == -1) {

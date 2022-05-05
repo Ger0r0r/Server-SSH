@@ -1,5 +1,38 @@
 #include "../headers/client.h"
 
+int Socket_config(struct sockaddr_in* server, uint16_t port, int socket_type, int setsockopt_option, char is_bind_need, in_addr_t addr) {
+    int a = 1;
+    server -> sin_family = AF_INET;
+    server -> sin_port   = htons(port);
+    server -> sin_addr.s_addr = addr;
+    int created_socket = socket(AF_INET, socket_type, 0);
+
+    if (created_socket < 0) {
+        //log_perror("socket");
+        exit(EXIT_FAILURE);
+    }
+
+    if (setsockopt_option > 0)
+        if (setsockopt(created_socket, SOL_SOCKET, setsockopt_option, &a, sizeof(a)) < 0) {
+            //log_perror("setsockopt");
+            exit(EXIT_FAILURE);
+        }
+
+	char NEED_BIND = 1;
+	char NOT_NEED_BIND = 2;
+    if (is_bind_need == NEED_BIND) 
+        if (bind(created_socket, (struct sockaddr*) server, sizeof(*server)) < 0) {
+            if (socket_type == SOCK_DGRAM && errno == 98) {
+                //log_perror("bind port problem\n");
+                return -1;
+            }
+            //log_perror("bind port = %hu\n", port);
+            exit(EXIT_FAILURE);
+        }
+
+    return created_socket;
+}
+
 input Read_input(){
 	char * enter = calloc(MAX_COMMAND_LENGHT, sizeof(char));
 	input ret = {.cmd = {0}, .arg = {0}};
