@@ -1,63 +1,5 @@
 #include "../headers/server.h"
 
-connection * Get_database (){
-
-	user ** database = calloc(MAX_USER_COUNT, sizeof(user *));		log_perror("calloc in Get_database");
-
-	int data = open(".data.txt", O_CREAT | O_RDWR, 0700);		log_perror("open .data.txt in Get_database");
-	// Many string like "__LOGIN__#__PASSWORD__#__OLD_KEY__#__OLD_IV__"
-
-	char temp[MAX_COMMAND_LENGHT * MAX_USER_COUNT] = {0};
-	read(data, temp, MAX_COMMAND_LENGHT * MAX_USER_COUNT);		log_perror("read .data.txt in Get_database");
-
-	char * check = (char *)&temp; // Just noNULL pointer
-	char * end = strchr(check + 1, '\n');		log_perror("strchr in Get_database");
-	end[0] = '\0';
-	int count = 0;
-
-
-	while (1){
-		database[count] = Get_user(check);
-		count++;
-		check = end + 1;
-		end = strchr(check + 1, '\n');		log_perror("strchr in Ger_database");
-		if (end == NULL){
-			break;			
-		}
-		end[0] = '\0';	
-	}
-
-	connection * ret = calloc(1, sizeof(connection));
-
-	ret->c_users = count;
-	ret->users = database;	
-
-	close(data);		log_perror("close in Get_database");
-	return ret;
-}
-
-user * Get_user(char * data){
-	//printf("Get string\n%s\n", data);
-	// String like "__LOGIN__#__PASSWORD__#__OLD_KEY__#__OLD_IV__"
-	user * pers = calloc(1, sizeof(user));		log_perror("calloc in Get_user");
-
-	char * temp;
-	pers->login = data;
-
-	temp = strchr(data, '#');		log_perror("strchr 1 in Get_user");
-	temp[0] = '\0';
-	pers->password = temp + 1;
-	temp = strchr(pers->password, '#');		log_perror("strchr 2 in Get_user");
-	temp[0] = '\0';
-	pers->key_old = temp + 1;
-	temp = strchr(pers->key_old, '#');		log_perror("strchr 2 in Get_user");
-	temp[0] = '\0';
-	pers->IV_old = temp + 1;
-	user * ptr = pers;
-	//printf("%s>%s>%s>%s\n", pers->login, pers->password, pers->key_old, pers->IV_old);
-	return ptr;
-}
-
 void Get_message(connection * bfd, char * message) {
 
 	memset(message, '\0', MAX_COMMAND_LENGHT);		log_perror("memset in Get_message");
@@ -105,10 +47,10 @@ int Parser(char * message, char * content, connection * bfd){
 
 	if (strcmp(cmd, "@Login") == 0){
 		log_info("Get command: @Login");
-		return Login(bfd, args);
+		//return Login(bfd, args);
 	}else if (strcmp(cmd, "@Have_previos_session") == 0){
 		log_info("Get command: @Have_previos_session\n");
-		return Check_previos_session(bfd, args);
+		//return Check_previos_session(bfd, args);
 	}else if (strcmp(cmd, "@#") == 0){
 		log_info("Get command: @#");
 		return Do_usual(bfd, args);

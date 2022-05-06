@@ -3,12 +3,13 @@
 SSI adm_addr;
 
 void Broadcast_scanning(){
+
 	struct sigaction act;
 	memset(&act, 0 , sizeof(act));		log_perror("memset 1 in Broadcast");
 	act.sa_sigaction = Update_admin_info;
 	act.sa_flags = SA_SIGINFO;
 	sigset_t set;
-	sigemptyset(&set); 					log_perror("sigemptyset 1 in Broadcast");
+	sigemptyset(&set); 		log_perror("sigemptyset 1 in Broadcast");
 	sigaddset(&set, SIGUSR1);			log_perror("sigaddset 1 in Broadcast");
 	act.sa_mask = set;
 
@@ -20,7 +21,7 @@ void Broadcast_scanning(){
 	int sock_fd_rcv, sock_fd_snd;
 	SSI serv_addr, cli_addr;
 	memset(&serv_addr, 0, sizeof(serv_addr));		log_perror("memset 2 in Broadcast");
-	memset(&cli_addr, 0, sizeof(cli_addr));			log_perror("memset 3 in Broadcast");
+	memset(&cli_addr, 0, sizeof(cli_addr));		log_perror("memset 3 in Broadcast");
 
 	sock_fd_rcv = socket(AF_INET, SOCK_DGRAM, 0);		log_perror("socket in Broadcast");
 	if(sock_fd_rcv < 0){
@@ -33,7 +34,7 @@ void Broadcast_scanning(){
 	serv_addr.sin_port = htons(BROADCAST_PORT);
 
 	int a = 1;
-	setsockopt(sock_fd_rcv, SOL_SOCKET, SO_BROADCAST, &a, sizeof(a));			log_perror("setsockopt in Broadcast_scannng");
+	setsockopt(sock_fd_rcv, SOL_SOCKET, SO_BROADCAST, &a, sizeof(a));		log_perror("setsockopt in Broadcast_scannng");
 	bind(sock_fd_rcv, (struct sockaddr*) &serv_addr, sizeof(serv_addr));		log_perror("bind in Broadcast_scannng");
 	
 
