@@ -80,7 +80,6 @@ int Command_copy_to(connection * data, char * message);
 int Command_copy_from(connection * data, char * message);
 
 int Broadcast_find();
-int Broadcast_search(int socket, struct sockaddr_in* server);
 void Generetion_keys(int mode, connection * data);
 int Check_for_old_keys(connection * data);
 int Auto_login(connection * data);
