@@ -17,7 +17,7 @@ int main(int argc, char ** argv) {
 
 	if (strcmp("-broadcast", argv[1]) == 0){
 		socket_ss = Socket_config(&server, BROADCAST_PORT, SOCK_DGRAM, SO_BROADCAST, NOT_NEED_BIND, htonl(INADDR_BROADCAST));
-		if (Broadcast_search(socket_ss, &server) == 0)
+		if (Broadcast_find() == 0)
 			return 0;
 	}else if (strcmp("-t", argv[1]) == 0){
 		if (strcmp("TCP", argv[2]) == 0){
@@ -42,7 +42,6 @@ int main(int argc, char ** argv) {
 
 	connection con_data;
 	memset(&con_data, 0, sizeof(con_data));
-	con_data.status = 0;
 	con_data.sock_fd = sock_fd_own;
 	
 	int ret_code = -1;
@@ -51,11 +50,11 @@ int main(int argc, char ** argv) {
 	while (ret_code < 0){
 		addition_port++;
 
-		con_data.my.sin_family = AF_INET; // IPv4
-		con_data.my.sin_addr.s_addr = INADDR_ANY;
-		con_data.my.sin_port = htons(OWN_PORT + addition_port);
+		con_data.client.sin_family = AF_INET; // IPv4
+		con_data.client.sin_addr.s_addr = INADDR_ANY;
+		con_data.client.sin_port = htons(OWN_PORT + addition_port);
 	
-		ret_code = bind(con_data.sock_fd, (const struct sockaddr *)&con_data.my, sizeof(con_data.my));
+		ret_code = bind(con_data.sock_fd, (const struct sockaddr *)&con_data.client, sizeof(con_data.client));
 	}
 
 	printf("Binded port %d\n", htons(OWN_PORT + addition_port));
@@ -79,11 +78,7 @@ int main(int argc, char ** argv) {
 	inet_aton(ip_for_connection, &con_data.admin.sin_addr);
 	con_data.admin.sin_port = htons(atoi(port_for_connection));
 
-	if (mode = 0){
-		
-	}
-
-	Generetion_keys(&con_data);
+	Generetion_keys(mode, &con_data);
 
 	//printf("In data\n%s %s\n", con_data.info_user.key, con_data.info_user.IV);
 
@@ -92,11 +87,11 @@ int main(int argc, char ** argv) {
 	int code = 1;
 	input enter;
 
-	while (code){
-		printf("> ");
-		enter = Read_input();
-		code = Do_task(&con_data, enter);
-	}
+	//while (code){
+	//	printf("> ");
+	//	enter = Read_input();
+	//	code = Do_task(&con_data, enter);
+	//}
 	return 0;
 }
 

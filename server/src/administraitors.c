@@ -99,9 +99,11 @@ void Administraitor(int mode){
 		log_error_handler("user_login");
 	
 	
-	//while (code){
-	//	Wait_message(bfd, message);
-	//	code = Parser(message, content, bfd);
-	//}
+
+
+	while (code){
+		Wait_message(bfd, message);
+		code = Parser(message, content, bfd);
+	}
 	exit(EXIT_SUCCESS);
 }

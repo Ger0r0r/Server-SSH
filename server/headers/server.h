@@ -26,7 +26,6 @@
 #include <security/pam_appl.h>
 #include <security/pam_misc.h>
 
-
 static int log_fd = -1;
 #define LOG_SIZE (1 << 14)
 static char buf_log[LOG_SIZE];
@@ -56,15 +55,6 @@ typedef struct {
 }input;
 
 typedef struct {
-	char * login;
-	char * password;
-	char * key;
-	char * IV;
-	char * key_old;
-	char * IV_old;
-}user;
-
-typedef struct {
 	SSI client;
 	SSI admin;
 	int sock_fd;
@@ -72,11 +62,6 @@ typedef struct {
 	char * key;
 	char * iv;
 }connection;
-
-struct pam_conv my_conv = {
-	misc_conv,
-	NULL,
-};
 
 // broadcast
 void Broadcast_scanning();
@@ -89,6 +74,12 @@ void New_admin_request(int sigN, siginfo_t* sigInfo, void* context);
 
 // administaitor
 void Administraitor(int mode);
+
+// tasks
+int Disconnected(connection * bfd);
+int Do_usual(connection * bfd, char * command);
+int Copy_to(connection * bfd, char * message);
+int Copy_from(connection * bfd, char * message);
 
 // message
 void Send_message(int mode, connection * bfd, char * string);

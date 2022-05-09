@@ -1,18 +1,21 @@
 #include "../headers/client.h"
 
- int Broadcast_search(int socket, struct sockaddr_in* server) {
+int Broadcast_search(int socket_ss, struct sockaddr_in* server) {
 	const char SEARCH = '2';
-	if (sendto(socket, &SEARCH, sizeof(char), 0, (struct sockaddr*) server, sizeof(*server)) < 0) {
-		//log_perror("sendto");
-		exit(EXIT_FAILURE);
-	}
+	CHECK(sendto(socket_ss, &SEARCH, sizeof(char), 0, (struct sockaddr*) server, sizeof(*server)))
+	
 	int button = 0;
 	int time_start = time(NULL);
 	SSI tmp_addr;
 	memset(&tmp_addr, 0, sizeof(tmp_addr));
+
+	tmp_addr.sin_family = AF_INET;
+	tmp_addr.sin_port = htons(BROADCAST_PORT);
+	tmp_addr.sin_addr.s_addr = htonl(INADDR_BROADCAST);
+
 	socklen_t tmp_addr_len = sizeof(tmp_addr);
 	struct pollfd fd_in[1];
-	fd_in[0].fd = socket;
+	fd_in[0].fd = socket_ss;
 	fd_in[0].events = POLLIN;
 	while (time(NULL) - time_start < 3) {
 		int ret = poll(fd_in, 2, SEARCHING_SERVERS_TIME);
@@ -23,22 +26,17 @@
 		else if (ret == 0)
 			break;
 		char port[MAX_COMMAND_LENGHT] = {};
-		if (recvfrom(socket, &port, sizeof(port), 0, (struct sockadd *)&tmp_addr, &tmp_addr_len) > 0){
-			int num_port = atoi(port);
-			printf("Server found IP %s port %d\n", inet_ntoa(tmp_addr.sin_addr), num_port);
-		} else {
-			//log_perror("recvfrom\n");
-			exit(EXIT_FAILURE);
-		}
+		CHECK(recvfrom(socket_ss, &port, sizeof(port), MSG_DONTWAIT, (struct sockadd *) &tmp_addr, &tmp_addr_len) > 0)
+		int num_port = atoi(port);
+		printf("Server found IP %s port %d\n", inet_ntoa(tmp_addr.sin_addr), num_port);
 	}
 	return 0;
- }
+}
 
-int Broadcast_find(SSI own_addr, SSI * ret_addr){
+int Broadcast_find(){
 	char buf[MAX_COMMAND_LENGHT] = {0};
 
-	sprintf(buf, "@Hello! port:%d", htons(own_addr.sin_port));
-
+	sprintf(buf, "Hello!\n");
 
 	SSI serv_addr;
 	memset(&serv_addr, 0, sizeof(serv_addr));
@@ -60,32 +58,24 @@ int Broadcast_find(SSI own_addr, SSI * ret_addr){
 	//printf("BR ip = %s, port = %d\n", inet_ntoa(serv_addr.sin_addr), ntohs(serv_addr.sin_port));
 
 	int n;
+	sendto(sock_fd, buf, strlen(buf), MSG_CONFIRM, (const struct sockaddr *) &serv_addr, sizeof serv_addr);
 
-	for (size_t i = 0; i < COUNT_OF_ATTEMPT_FOR_CONNECTION; i++){
-		printf("\tAttempt %zu\n", i + 1);
+	SSI previos;
+	memcpy(&previos, &serv_addr, sizeof(serv_addr));
 
-		sendto(sock_fd, buf, strlen(buf), MSG_CONFIRM, (const struct sockaddr *) &serv_addr, sizeof serv_addr);
+	for (size_t i = 0; i < 1000; i++){
+		//printf("\tAttempt %zu ", i + 1);
 
-		usleep(TIME_BETWEEN_ATTEMPTS_FOR_CONNECTION);
-		// get
 		socklen_t len = sizeof(serv_addr);
 		n = recvfrom(sock_fd, buf, sizeof(buf), MSG_DONTWAIT, (struct sockaddr *) &serv_addr, &len);
 		
+		
+
 		//printf("\tGet: %s\n", buf);
 
-		if (n && (strncmp(buf, "@Your administraitor:\n", 20) == 0)){
-			printf("\tGet answer from server: ip = %s\n\tMessage : %s\n", inet_ntoa(serv_addr.sin_addr), buf);
-
-			char * point = strchr(buf, ':');
-			point++;
-
-			printf("\nPick up port: %s\n", point);
-
-			ret_addr->sin_family = AF_INET;
-			ret_addr->sin_addr = serv_addr.sin_addr;
-			ret_addr->sin_port = htons(atoi(point));
-
-			return 1;
+		if (n && (previos.sin_addr.s_addr != serv_addr.sin_addr.s_addr)){
+			printf("\tGet answer from server: ip = %s\n", inet_ntoa(serv_addr.sin_addr));
+			previos.sin_addr.s_addr = serv_addr.sin_addr.s_addr;
 		}
 	}
 	return 0;

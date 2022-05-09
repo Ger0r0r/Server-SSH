@@ -4,7 +4,7 @@ project(Server_SHH VERSION 0.1)
 
 find_package(OpenSSL REQUIRED)
 
-set(CMAKE_C_FLAGS "-lm -lpam -lpam_misc")
+set(CMAKE_C_FLAGS "${CMAKE_C_FLAGS} -lm -lpam -lpam_misc")
 
 set(EXEC_CLIENT "client")
 

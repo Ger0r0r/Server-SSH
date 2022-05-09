@@ -1,27 +1,5 @@
 #include "../headers/server.h"
 
-void Get_message(connection * bfd, char * message) {
-
-	memset(message, '\0', MAX_COMMAND_LENGHT);		log_perror("memset in Get_message");
-	int n;
-	socklen_t len = sizeof(bfd->client);
-
-	//printf("Info about connection:\n");
-	//printf("Discriptor - %d\n", bfd->sock_fd);
-	//printf("Client - %s:%d\n", inet_ntoa(bfd->client.sin_addr), htons(bfd->client.sin_port));
-	//printf("Keys - %s %s\n", bfd->key, bfd->iv);
-	//printf("Database\n");
-	//for (size_t i = 0; i < bfd->c_users; i++){
-	//	printf("%s %s %s %s\n", bfd->users[i]->login, bfd->users[i]->password, bfd->users[i]->key_old, bfd->users[i]->IV_old);
-	//}printf("\n");
-
-	//printf("Wait for a command...\n");
-	n = recvfrom(bfd->sock_fd, (char *)message, MAX_COMMAND_LENGHT, MSG_WAITALL, (struct sockaddr *)&bfd->client, &len);		log_perror("recvfrom in Get_message");
-	//printf("Wow, lets go!\n");
-	//printf("I recived command\n%s\n", message);
-	return;
-}
-
 int Parser(char * message, char * content, connection * bfd){
 	// 0 - @Disconnected
 	// 1 - @Login __LOGIN__#__PASSWORD__

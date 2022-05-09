@@ -29,7 +29,21 @@
 #include <openssl/pem.h>
 #include <openssl/err.h>
 
+static int log_fd = -1;
+#define LOG_SIZE (1 << 14)
+static char buf_log[LOG_SIZE];
+
+#define log(fmt, ...) print_log("%s:%d \n" fmt, __FILE__, __LINE__, ##__VA_ARGS__)
+#define log_info(fmt, ...) log("[INFO] " fmt, ##__VA_ARGS__)
+#define log_error(fmt, ...) log("[ERROR] " fmt, ##__VA_ARGS__)
+#define CHECK(arg) 	\
+	if (arg < 0){ 				\
+		log("value < 0");	\
+		exit(EXIT_SUCCESS);		\
+	} 							\
+
 #define SSI struct sockaddr_in
+#define SA struct sockaddr
 
 #define MAX_COMMAND_LENGHT 1024
 #define MAX_OUTPUT_LENGHT 65536
@@ -47,49 +61,37 @@ typedef struct {
 }input;
 
 typedef struct {
-	char * login;
-	char * password;
-	char * key;
-	char * IV;
-	char * key_old;
-	char * IV_old;
-}user;
-
-typedef struct{
+	SSI client;
 	SSI admin;
-	SSI my;
 	int sock_fd;
-	int status; // 2 - login; 1 - connected; 0 - disconnected
-	user info_user;
+	int conn_fd;
+	char * key;
+	char * iv;
 }connection;
 
 input Read_input();
 int Do_task(connection * data, input enter);
 int Socket_config(struct sockaddr_in* server, uint16_t port, int socket_type, int setsockopt_option, char is_bind_need, in_addr_t addr);
 
+int Disconnected(connection * bfd);
 int Command_exit(connection * data);
-int Command_login(connection * data, char * log_pas);
-int Command_connect(connection * data);
 int Command_exec(connection * data, input enter);
 int Command_copy_to(connection * data, char * message);
 int Command_copy_from(connection * data, char * message);
 
-int Connection_attempt(SSI own_addr, SSI * adm_addr);
-int Broadcast_find(SSI own_addr, SSI * ret_addr);
+int Broadcast_find();
 int Broadcast_search(int socket, struct sockaddr_in* server);
-void Generetion_keys(connection * data);
+void Generetion_keys(int mode, connection * data);
 int Check_for_old_keys(connection * data);
 int Auto_login(connection * data);
 
-
-int send_message(int mode, char * message, connection data);
-int get_message(int mode, char * message, connection data);
+void Send_message(int mode, connection * bfd, char * string);
+void Get_message(int mode, connection * bfd, char * string);
 
 void Preparing_numeral_keys(int sock_fd, SSI admin, size_t * K1, size_t * K2);
 size_t Speed_degree_with_mod(size_t g, size_t x, size_t p);
 void Make_keys(size_t K1, size_t K2, char * key, char * IV);
-void Encryption();
-void Decoding();
-
+int Encrypt(unsigned char *plaintext, int plaintext_len, unsigned char *key, unsigned char *iv, unsigned char *ciphertext);
+int Decrypt(unsigned char *ciphertext, int ciphertext_len, unsigned char *key, unsigned char *iv, unsigned char *plaintext);
 
 #endif

@@ -2,6 +2,11 @@
 
 //compile with -lpam -lpam_misc
 
+struct pam_conv my_conv = {
+	misc_conv,
+	NULL,
+};
+
 int Login_into_user(char *username){
 	pam_handle_t *pam;
 	int ret;
