@@ -4,7 +4,7 @@ void Preparing_numeral_keys(int mode, connection * bfd, size_t * K1, size_t * K2
 
 	srand(time(0));		log_perror("srand in Prepare keys");
 
-	//printf("GO SECURE\n");
+	printf("GO SECURE\n");
 
 	size_t a1 = rand() % 0b11111111111111111111111111111111;		log_perror("rand 1 in Prepare keys");
 	size_t a2 = rand() % 0b11111111111111111111111111111111;		log_perror("rand 2 in Prepare keys");
@@ -20,6 +20,7 @@ void Preparing_numeral_keys(int mode, connection * bfd, size_t * K1, size_t * K2
 	char greetings[MAX_COMMAND_LENGHT] = {0};
 
 	sprintf(greetings, "@You are not alone!:%d#%d#%zu#%zu\n", PUBLIC_KEY_P, PUBLIC_KEY_G, A1, A2);		log_perror("sprintf in Prepare keys");
+	//usleep(TIMEOUT_BEFORE_SEND_KEYS);
 
 	if (mode){
 		write(bfd->conn_fd, greetings, strlen(greetings));	
@@ -27,7 +28,6 @@ void Preparing_numeral_keys(int mode, connection * bfd, size_t * K1, size_t * K2
 		sendto(bfd->sock_fd, (const char *)greetings, strlen(greetings), MSG_CONFIRM, (const struct sockaddr *)&(bfd->client), sizeof(bfd->client));		log_perror("sendto in Prepare keys");
 	}
 
-	usleep(TIMEOUT_BEFORE_SEND_KEYS);
 
 	int n;
 	unsigned int len;
@@ -100,8 +100,7 @@ int Encrypt(unsigned char *plaintext, int plaintext_len, unsigned char *key, uns
 	int ciphertext_len;
 
 	/* Create and initialise the context */
-	if(!(ctx = EVP_CIPHER_CTX_new()))
-		log_error_handler("EVP_CIPHER_CTX_new");
+	ctx = EVP_CIPHER_CTX_new();
 
 	/*
 	 * Initialise the encryption operation. IMPORTANT - ensure you use a key
@@ -110,23 +109,20 @@ int Encrypt(unsigned char *plaintext, int plaintext_len, unsigned char *key, uns
 	 * IV size for *most* modes is the same as the block size. For AES this
 	 * is 128 bits
 	 */
-	if(1 != EVP_EncryptInit_ex(ctx, EVP_aes_256_cbc(), NULL, key, iv))
-		log_error_handler("EVP_EncryptInit_ex");
+	EVP_EncryptInit_ex(ctx, EVP_aes_256_cbc(), NULL, key, iv);
 
 	/*
 	 * Provide the message to be encrypted, and obtain the encrypted output.
 	 * EVP_EncryptUpdate can be called multiple times if necessary
 	 */
-	if(1 != EVP_EncryptUpdate(ctx, ciphertext, &len, plaintext, plaintext_len))
-		log_error_handler("EVP_EncryptUpdate");
+	EVP_EncryptUpdate(ctx, ciphertext, &len, plaintext, plaintext_len);
 	ciphertext_len = len;
 
 	/*
 	 * Finalise the encryption. Further ciphertext bytes may be written at
 	 * this stage.
 	 */
-	if(1 != EVP_EncryptFinal_ex(ctx, ciphertext + len, &len))
-		log_error_handler("EVP_EncryptFinal_ex");
+	EVP_EncryptFinal_ex(ctx, ciphertext + len, &len);
 	ciphertext_len += len;
 
 	/* Clean up */
@@ -144,8 +140,7 @@ int Decrypt(unsigned char *ciphertext, int ciphertext_len, unsigned char *key, u
 	int plaintext_len;
 
 	/* Create and initialise the context */
-	if(!(ctx = EVP_CIPHER_CTX_new()))
-		log_error_handler("EVP_CIPHER_CTX_new");
+	ctx = EVP_CIPHER_CTX_new();
 
 	/*
 	 * Initialise the decryption operation. IMPORTANT - ensure you use a key
@@ -154,23 +149,21 @@ int Decrypt(unsigned char *ciphertext, int ciphertext_len, unsigned char *key, u
 	 * IV size for *most* modes is the same as the block size. For AES this
 	 * is 128 bits
 	 */
-	if(1 != EVP_DecryptInit_ex(ctx, EVP_aes_256_cbc(), NULL, key, iv))
-		log_error_handler("EVP_DecryptInit_ex");
+	EVP_DecryptInit_ex(ctx, EVP_aes_256_cbc(), NULL, key, iv);
+
 
 	/*
 	 * Provide the message to be decrypted, and obtain the plaintext output.
 	 * EVP_DecryptUpdate can be called multiple times if necessary.
 	 */
-	if(1 != EVP_DecryptUpdate(ctx, plaintext, &len, ciphertext, ciphertext_len))
-		log_error_handler("EVP_DecryptUpdate");
+	EVP_DecryptUpdate(ctx, plaintext, &len, ciphertext, ciphertext_len);
 	plaintext_len = len;
 
 	/*
 	 * Finalise the decryption. Further plaintext bytes may be written at
 	 * this stage.
 	 */
-	if(1 != EVP_DecryptFinal_ex(ctx, plaintext + len, &len))
-		log_error_handler("EVP_DecryptFinal_ex");
+	EVP_DecryptFinal_ex(ctx, plaintext + len, &len);
 	plaintext_len += len;
 
 	/* Clean up */

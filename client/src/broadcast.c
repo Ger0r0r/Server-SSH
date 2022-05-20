@@ -36,6 +36,7 @@ int Broadcast_find(){
 		//printf("\tAttempt %zu ", i + 1);
 
 		socklen_t len = sizeof(serv_addr);
+		memset(buf, '\0', MAX_COMMAND_LENGHT);
 		n = recvfrom(sock_fd, buf, sizeof(buf), MSG_DONTWAIT, (struct sockaddr *) &serv_addr, &len);
 		
 		
@@ -43,7 +44,7 @@ int Broadcast_find(){
 		//printf("\tGet: %s\n", buf);
 
 		if (n && (previos.sin_addr.s_addr != serv_addr.sin_addr.s_addr)){
-			printf("\tGet answer from server: ip = %s\n", inet_ntoa(serv_addr.sin_addr));
+			printf("\tGet answer from server: ip = %s:%s", inet_ntoa(serv_addr.sin_addr),buf);
 			previos.sin_addr.s_addr = serv_addr.sin_addr.s_addr;
 		}
 	}

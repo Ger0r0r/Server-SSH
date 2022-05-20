@@ -1,15 +1,17 @@
 #include "../headers/client.h"
 
-void Preparing_numeral_keys(int sock_fd, SSI admin, size_t * K1, size_t * K2){
-
-	//printf("GO SECURE!!!\n");
+void Preparing_numeral_keys(int mode, connection * bfd, size_t * K1, size_t * K2){
 
 	int n;
 	unsigned int len;
 	char admin_message[MAX_COMMAND_LENGHT] = {0};
-	n = recvfrom(sock_fd, (char *)admin_message, MAX_COMMAND_LENGHT, MSG_WAITALL, (struct sockaddr *)&admin, &len);
+	printf("CHECK\n");
+	if (mode){
+		n = read(bfd->sock_fd, admin_message, MAX_COMMAND_LENGHT);
+	}else{
+		n = recvfrom(bfd->sock_fd, (char *)admin_message, MAX_COMMAND_LENGHT, MSG_WAITALL, (struct sockaddr *)&(bfd->admin), &len);		log_perror("recvfrom in Prepare keys");
+	}
 	admin_message[n] = '\0';
-
 	srand(time(0));
 
 	size_t b1 = rand() % 0b11111111111111111111111111111111;
@@ -50,8 +52,11 @@ void Preparing_numeral_keys(int sock_fd, SSI admin, size_t * K1, size_t * K2){
 
 	sprintf(answer, "@Secret info:%zu:%zu", B1, B2);
 
-	sendto(sock_fd, (const char *)answer, strlen(answer), MSG_CONFIRM, (const struct sockaddr *)&admin, sizeof(admin));
-
+	if (mode){
+		write(bfd->sock_fd, answer, strlen(answer));	
+	}else{
+		sendto(bfd->sock_fd, (const char *)answer, strlen(answer), MSG_CONFIRM, (const struct sockaddr *)&(bfd->admin), sizeof(bfd->admin));		log_perror("sendto in Prepare keys");
+	}
 	//printf("CHECK FUUCK\n");
 	//printf("Descriptor - %d\n", sock_fd);
 	//printf("Admin - %s:%d\n", inet_ntoa(admin.sin_addr), htons(admin.sin_port));
@@ -104,7 +109,7 @@ int Encrypt(unsigned char *plaintext, int plaintext_len, unsigned char *key, uns
 	int ciphertext_len;
 
 	/* Create and initialise the context */
-	CHECK(!(ctx = EVP_CIPHER_CTX_new()))
+	ctx = EVP_CIPHER_CTX_new();
 
 	/*
 	 * Initialise the encryption operation. IMPORTANT - ensure you use a key
@@ -113,20 +118,20 @@ int Encrypt(unsigned char *plaintext, int plaintext_len, unsigned char *key, uns
 	 * IV size for *most* modes is the same as the block size. For AES this
 	 * is 128 bits
 	 */
-	CHECK(1 != EVP_EncryptInit_ex(ctx, EVP_aes_256_cbc(), NULL, key, iv))
+	EVP_EncryptInit_ex(ctx, EVP_aes_256_cbc(), NULL, key, iv);
 
 	/*
 	 * Provide the message to be encrypted, and obtain the encrypted output.
 	 * EVP_EncryptUpdate can be called multiple times if necessary
 	 */
-	CHECK(1 != EVP_EncryptUpdate(ctx, ciphertext, &len, plaintext, plaintext_len))
+	EVP_EncryptUpdate(ctx, ciphertext, &len, plaintext, plaintext_len);
 	ciphertext_len = len;
 
 	/*
 	 * Finalise the encryption. Further ciphertext bytes may be written at
 	 * this stage.
 	 */
-	CHECK(1 != EVP_EncryptFinal_ex(ctx, ciphertext + len, &len))
+	EVP_EncryptFinal_ex(ctx, ciphertext + len, &len);
 	ciphertext_len += len;
 
 	/* Clean up */
@@ -144,7 +149,7 @@ int Decrypt(unsigned char *ciphertext, int ciphertext_len, unsigned char *key, u
 	int plaintext_len;
 
 	/* Create and initialise the context */
-	CHECK(!(ctx = EVP_CIPHER_CTX_new()))
+	ctx = EVP_CIPHER_CTX_new();
 
 	/*
 	 * Initialise the decryption operation. IMPORTANT - ensure you use a key
@@ -153,20 +158,20 @@ int Decrypt(unsigned char *ciphertext, int ciphertext_len, unsigned char *key, u
 	 * IV size for *most* modes is the same as the block size. For AES this
 	 * is 128 bits
 	 */
-	CHECK(1 != EVP_DecryptInit_ex(ctx, EVP_aes_256_cbc(), NULL, key, iv))
+	EVP_DecryptInit_ex(ctx, EVP_aes_256_cbc(), NULL, key, iv);
 
 	/*
 	 * Provide the message to be decrypted, and obtain the plaintext output.
 	 * EVP_DecryptUpdate can be called multiple times if necessary.
 	 */
-	CHECK(1 != EVP_DecryptUpdate(ctx, plaintext, &len, ciphertext, ciphertext_len))
+	EVP_DecryptUpdate(ctx, plaintext, &len, ciphertext, ciphertext_len);
 	plaintext_len = len;
 
 	/*
 	 * Finalise the decryption. Further plaintext bytes may be written at
 	 * this stage.
 	 */
-	CHECK(1 != EVP_DecryptFinal_ex(ctx, plaintext + len, &len))
+	EVP_DecryptFinal_ex(ctx, plaintext + len, &len);
 	plaintext_len += len;
 
 	/* Clean up */

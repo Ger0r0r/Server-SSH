@@ -3,11 +3,14 @@
 int signal_input;
 int current_admins = 0;
 int mode;
+int fd_in;
+int fd_out;
 connection * bfd; // Big Faking Database
 
-void Wait_connection(int connection_mode){
-
+void Wait_connection(int connection_mode, int stdin_copy, int stdout_copy){
 	mode = connection_mode; 
+	fd_in = stdin_copy;
+	fd_out = stdout_copy;
 
 	struct sigaction act_usr1;
 	memset(&act_usr1, 0 , sizeof(act_usr1));		log_perror("memset 1 in Wait connection");
@@ -57,7 +60,7 @@ void New_admin_request(int sigN, siginfo_t* sigInfo, void* context){
 	int pid = fork();		log_perror("fork in New admin");
 	if (pid == 0){
 		current_admins++;
-		Administraitor(mode);
+		Administraitor(mode, fd_in, fd_out);
 		return;
 	}
 	return;

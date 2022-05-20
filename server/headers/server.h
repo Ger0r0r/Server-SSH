@@ -26,6 +26,8 @@
 #include <security/pam_appl.h>
 #include <security/pam_misc.h>
 
+#define PPP printf("CHECK\n");
+
 static int log_fd = -1;
 #define LOG_SIZE (1 << 14)
 static char buf_log[LOG_SIZE];
@@ -39,7 +41,7 @@ static char buf_log[LOG_SIZE];
 #define SSI struct sockaddr_in
 #define SA struct sockaddr
 
-#define MAX_COMMAND_LENGHT 1024
+#define MAX_COMMAND_LENGHT 65536
 #define MAX_OUTPUT_LENGHT 65536
 #define BROADCAST_PORT 23456
 #define PUBLIC_KEY_P 20999999
@@ -68,12 +70,12 @@ void Broadcast_scanning();
 void Update_admin_info(int sigN, siginfo_t* sigInfo, void* context);
 
 // connection_handler
-void Wait_connection(int connection_mode);
+void Wait_connection(int connection_mode, int stdin_copy, int stdout_copy);
 void Send_admin_info(int sigN, siginfo_t* sigInfo, void* context);
 void New_admin_request(int sigN, siginfo_t* sigInfo, void* context);
 
 // administaitor
-void Administraitor(int mode);
+void Administraitor(int mode, int stdin_copy, int stdout_copy);
 
 // tasks
 int Disconnected(connection * bfd);

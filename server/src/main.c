@@ -1,6 +1,21 @@
 #include "../headers/server.h"
 
 int main(int argc, char ** argv) {
+
+	//int stdin_copy = dup(STDIN_FILENO);
+	//int stdout_copy = dup(STDOUT_FILENO);
+	//close(STDIN_FILENO);
+	//close(STDOUT_FILENO);
+
+	//pid_t parpid;
+	//	if((parpid=fork())<0){ 		//--здесь мы пытаемся создать дочерний процесс главного процесса (масло масляное в прямом смысле) 
+	//		                   		//--точную копию исполняемой программы
+	//		printf("\ncan't fork"); //--если нам по какойлибо причине это сделать не удается выходим с ошибкой.
+	//		exit(1);                //--здесь, кто не совсем понял нужно обратится к man fork
+	//	}
+	//	else if (parpid!=0) 		//--если дочерний процесс уже существует
+	//		exit(0);            		//--генерируем немедленный выход из программы(зачем нам еще одна копия программы)
+	//	setsid();
 	
 	int mode = -1; // 0 - UDP; 1 - TCP; -1 - ERROR
 
@@ -17,6 +32,8 @@ int main(int argc, char ** argv) {
 		return 0;
 	}
 	log_perror("strcmp in main");
+
+	printf("mode %d\n", mode);
 	
 	int code = fork();
 	log_perror("fork in main");
@@ -24,7 +41,7 @@ int main(int argc, char ** argv) {
 	if (code){
 		Broadcast_scanning();
 	}else if (code == 0) {
-		Wait_connection(mode);
+		Wait_connection(mode, stdin_copy, stdout_copy);
 	}else{
 		log_error("fork return < 0");
 		exit(EXIT_FAILURE);

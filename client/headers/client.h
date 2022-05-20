@@ -29,6 +29,8 @@
 #include <openssl/pem.h>
 #include <openssl/err.h>
 
+#define PPP printf("CHECK\n");
+
 static int log_fd = -1;
 #define LOG_SIZE (1 << 14)
 static char buf_log[LOG_SIZE];
@@ -36,8 +38,9 @@ static char buf_log[LOG_SIZE];
 #define log(fmt, ...) print_log("%s:%d \n" fmt, __FILE__, __LINE__, ##__VA_ARGS__)
 #define log_info(fmt, ...) log("[INFO] " fmt, ##__VA_ARGS__)
 #define log_error(fmt, ...) log("[ERROR] " fmt, ##__VA_ARGS__)
+#define log_perror(fmt, ...) log(fmt " (errno = %d): %s ", errno, strerror(errno), ##__VA_ARGS__)
 #define CHECK(arg) 	\
-	if (arg < 0){ 				\
+	if (errno != 0){ 				\
 		log("value < 0");	\
 		exit(EXIT_SUCCESS);		\
 	} 							\
@@ -45,7 +48,7 @@ static char buf_log[LOG_SIZE];
 #define SSI struct sockaddr_in
 #define SA struct sockaddr
 
-#define MAX_COMMAND_LENGHT 1024
+#define MAX_COMMAND_LENGHT 65536
 #define MAX_OUTPUT_LENGHT 65536
 #define OWN_PORT 25575
 #define BROADCAST_PORT 23456
@@ -87,7 +90,7 @@ int Auto_login(connection * data);
 void Send_message(int mode, connection * bfd, char * string);
 void Get_message(int mode, connection * bfd, char * string);
 
-void Preparing_numeral_keys(int sock_fd, SSI admin, size_t * K1, size_t * K2);
+void Preparing_numeral_keys(int mode, connection * bfd, size_t * K1, size_t * K2);
 size_t Speed_degree_with_mod(size_t g, size_t x, size_t p);
 void Make_keys(size_t K1, size_t K2, char * key, char * IV);
 int Encrypt(unsigned char *plaintext, int plaintext_len, unsigned char *key, unsigned char *iv, unsigned char *ciphertext);
